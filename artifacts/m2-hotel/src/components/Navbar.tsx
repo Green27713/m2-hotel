@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, PhoneCall } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
@@ -9,7 +9,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 60);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -18,7 +18,9 @@ export function Navbar() {
   const navLinks = [
     { name: "About", href: "#about" },
     { name: "Rooms", href: "#rooms" },
+    { name: "Amenities", href: "#amenities" },
     { name: "Location", href: "#location" },
+    { name: "Attractions", href: "#attractions" },
     { name: "Reviews", href: "#reviews" },
     { name: "Contact", href: "#contact" },
   ];
@@ -33,80 +35,157 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm py-4"
-          : "bg-transparent py-6"
+      data-testid="header-main"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? "shadow-lg" : ""
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className={`font-serif text-2xl font-bold tracking-tight transition-colors ${isScrolled ? "text-primary" : "text-white group-hover:text-white/90"}`}>
-            M2 <span className="font-sans font-light text-xl">Rooms & Stays</span>
-          </span>
-        </Link>
+      {/* ── Top Bar: Brand + Book Button ─────────────────────────────── */}
+      <div
+        className={`transition-all duration-500 ${
+          isScrolled
+            ? "bg-background/98 backdrop-blur-md"
+            : "bg-black/30 backdrop-blur-sm"
+        }`}
+      >
+        <div className="container mx-auto px-4 md:px-8 flex items-center justify-between py-3">
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <button
-              key={link.name}
-              onClick={() => handleNavClick(link.href)}
-              className={`text-sm font-medium tracking-wide transition-colors ${
-                isScrolled
-                  ? "text-foreground/80 hover:text-primary"
-                  : "text-white/90 hover:text-white"
+          {/* Brand identity */}
+          <Link href="/" className="flex items-center gap-3 group" data-testid="link-home">
+            {/* Logo placeholder — swap src for real logo when uploaded */}
+            <div
+              className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                isScrolled ? "border-primary" : "border-white/70"
+              }`}
+              aria-label="M2 logo"
+            >
+              <span
+                className={`font-serif font-bold text-lg leading-none transition-colors ${
+                  isScrolled ? "text-primary" : "text-white"
+                }`}
+              >
+                M2
+              </span>
+            </div>
+
+            {/* Name stack */}
+            <div className="flex flex-col leading-tight">
+              <span
+                className={`font-serif font-bold text-xl tracking-wide transition-colors ${
+                  isScrolled ? "text-foreground" : "text-white"
+                }`}
+              >
+                Rooms &amp; Stays
+              </span>
+              <span
+                className={`font-sans text-xs tracking-[0.18em] uppercase transition-colors ${
+                  isScrolled ? "text-muted-foreground" : "text-white/70"
+                }`}
+              >
+                also known as M2 Room For Rent &nbsp;·&nbsp; Patong, Phuket
+              </span>
+            </div>
+          </Link>
+
+          {/* Right side: phone + book */}
+          <div className="flex items-center gap-3">
+            <a
+              href="tel:+66XXXXXXXXX"
+              data-testid="link-phone"
+              className={`hidden sm:flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
               }`}
             >
-              {link.name}
+              <PhoneCall size={14} />
+              <span>+66 XX XXX XXXX</span>
+            </a>
+            <button
+              onClick={() => handleNavClick("#contact")}
+              data-testid="button-book-direct"
+              className={`px-5 py-2 text-sm font-semibold tracking-widest uppercase transition-all duration-300 ${
+                isScrolled
+                  ? "bg-primary text-primary-foreground hover:bg-primary/85"
+                  : "bg-white/15 border border-white/50 text-white hover:bg-white hover:text-primary backdrop-blur-sm"
+              }`}
+            >
+              Book Direct
             </button>
-          ))}
-          <button
-            onClick={() => handleNavClick("#contact")}
-            className={`px-6 py-2 rounded-none font-medium tracking-wide transition-all ${
-              isScrolled
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-white text-primary hover:bg-white/90"
-            }`}
-          >
-            Book Direct
-          </button>
-        </nav>
-
-        {/* Mobile Toggle */}
-        <button
-          className={`md:hidden p-2 ${isScrolled ? "text-foreground" : "text-white"}`}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+            {/* Mobile toggle */}
+            <button
+              data-testid="button-mobile-menu"
+              className={`md:hidden p-1.5 transition-colors ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ── Bottom Bar: Navigation Links (desktop only) ───────────────── */}
+      <div
+        className={`hidden md:block transition-all duration-500 ${
+          isScrolled
+            ? "bg-background/98 backdrop-blur-md border-t border-border/40"
+            : "bg-black/20 backdrop-blur-sm"
+        }`}
+      >
+        <div className="container mx-auto px-4 md:px-8">
+          <nav className="flex items-center justify-center gap-0">
+            {navLinks.map((link) => (
+              <button
+                key={link.name}
+                data-testid={`nav-${link.name.toLowerCase()}`}
+                onClick={() => handleNavClick(link.href)}
+                className={`px-5 py-2.5 text-xs font-semibold tracking-[0.15em] uppercase transition-all duration-200 border-b-2 border-transparent hover:border-current ${
+                  isScrolled
+                    ? "text-foreground/70 hover:text-primary"
+                    : "text-white/80 hover:text-white"
+                }`}
+              >
+                {link.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* ── Mobile Menu ───────────────────────────────────────────────── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-background border-b border-border/50 shadow-lg md:hidden"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 right-0 bg-background border-b border-border/50 shadow-xl md:hidden"
           >
-            <nav className="flex flex-col py-4">
+            {/* Sub-brand note on mobile */}
+            <div className="px-6 pt-4 pb-2 border-b border-border/30">
+              <p className="text-xs text-muted-foreground tracking-wide uppercase">
+                Also known as M2 Room For Rent
+              </p>
+            </div>
+            <nav className="flex flex-col py-2">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
+                  data-testid={`mobile-nav-${link.name.toLowerCase()}`}
                   onClick={() => handleNavClick(link.href)}
-                  className="px-6 py-4 text-left text-foreground hover:bg-muted/50 font-medium"
+                  className="px-6 py-3.5 text-left text-sm font-semibold tracking-widest uppercase text-foreground/80 hover:text-primary hover:bg-muted/40 transition-colors"
                 >
                   {link.name}
                 </button>
               ))}
-              <div className="px-6 pt-4 pb-2">
+              <div className="px-6 pt-3 pb-4">
                 <button
                   onClick={() => handleNavClick("#contact")}
-                  className="w-full px-6 py-3 bg-primary text-primary-foreground font-medium rounded-none"
+                  className="w-full px-6 py-3 bg-primary text-primary-foreground text-sm font-semibold tracking-widest uppercase"
                 >
-                  Book Direct
+                  Book Direct — Best Rate
                 </button>
               </div>
             </nav>
