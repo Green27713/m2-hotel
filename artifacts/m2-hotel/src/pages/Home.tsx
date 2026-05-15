@@ -22,6 +22,7 @@ import heroSlide1 from "@/assets/M2_deluxe_balcony_enhanced.jpg";
 import heroSlide2 from "@/assets/M2_superior_enhanced.jpg";
 import heroSlide3 from "@/assets/M2_lobby_enhanced.jpg";
 import heroSlide4 from "@/assets/M2_area_enhanced.jpg";
+import heroSlide5 from "@/assets/hero.png";
 import exteriorImg from "@/assets/M2_exterior_enhanced.jpg";
 import lobbyImg from "@/assets/M2_lobby_enhanced.jpg";
 import deluxeBalconyImg from "@/assets/M2_deluxe_balcony_enhanced.jpg";
@@ -42,6 +43,7 @@ const heroSlides = [
   { img: heroSlide2, label: "Spacious, modern interiors" },
   { img: heroSlide3, label: "Warm lobby lounge — work or unwind" },
   { img: heroSlide4, label: "Steps from the streets of Patong" },
+  { img: heroSlide5, label: "Tropical sunsets and crystal-clear waters — Patong Beach, Phuket" },
 ];
 
 const fadeIn = {
