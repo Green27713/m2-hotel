@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "LIV1y0lVF68hE2kx_JKX6"
@@ -48,3 +47,9 @@ id = "I4lTQDlQlL3uEIqO54rWW"
 uri = "file://artifacts/m2-hotel/src/assets/attraction4.png"
 type = "image"
 title = "Big Buddha Phuket"
+
+[[outputs]]
+id = "g9_CB9V3W84OJQ3i3eN-v"
+uri = "file://M2_WEBSITE_SOP.md"
+type = "text"
+title = "M2 Rooms & Stays — Website Operations Manual (SOP)"

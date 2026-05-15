@@ -81,14 +81,14 @@ export function Navbar() {
           {/* Right side: phone + book */}
           <div className="flex items-center gap-3">
             <a
-              href="tel:+66XXXXXXXXX"
+              href="tel:+66982221682"
               data-testid="link-phone"
               className={`hidden sm:flex items-center gap-1.5 text-sm font-medium transition-colors ${
                 isScrolled ? "text-muted-foreground hover:text-primary" : "text-white/80 hover:text-white"
               }`}
             >
               <PhoneCall size={14} />
-              <span>+66 XX XXX XXXX</span>
+              <span>+66 098 222 1682</span>
             </a>
             <button
               onClick={() => handleNavClick("#contact")}

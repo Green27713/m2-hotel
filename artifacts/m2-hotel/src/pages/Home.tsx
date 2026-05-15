@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import heroSlide1 from "@/assets/M2_deluxe_balcony_enhanced.jpg";
 import heroSlide2 from "@/assets/M2_superior_enhanced.jpg";
 import heroSlide3 from "@/assets/M2_lobby_enhanced.jpg";
+import heroSlide4 from "@/assets/M2_area_enhanced.jpg";
 import exteriorImg from "@/assets/M2_exterior_enhanced.jpg";
 import lobbyImg from "@/assets/M2_lobby_enhanced.jpg";
 import deluxeBalconyImg from "@/assets/M2_deluxe_balcony_enhanced.jpg";
@@ -40,6 +41,7 @@ const heroSlides = [
   { img: heroSlide1, label: "Sun-drenched rooms with balcony views" },
   { img: heroSlide2, label: "Spacious, modern interiors" },
   { img: heroSlide3, label: "Warm lobby lounge — work or unwind" },
+  { img: heroSlide4, label: "Steps from the streets of Patong" },
 ];
 
 const fadeIn = {
@@ -525,16 +527,32 @@ export function Home() {
                 <div className="flex items-start gap-4">
                   <Phone className="text-primary mt-1 shrink-0" size={24} />
                   <div>
-                    <h4 className="font-medium text-lg mb-1">WhatsApp / Phone</h4>
+                    <h4 className="font-medium text-lg mb-1">WhatsApp / Reservations</h4>
                     <a
-                      href="https://wa.me/66XXXXXXXXX"
+                      href="https://wa.me/66982221682"
                       target="_blank"
                       rel="noreferrer"
                       data-testid="link-whatsapp"
-                      className="text-muted-foreground font-light hover:text-primary transition-colors"
+                      className="text-muted-foreground font-light hover:text-primary transition-colors block"
                     >
-                      +66 XX XXX XXXX
+                      +66 098 222 1682
                     </a>
+                    <p className="text-xs text-muted-foreground/60 mt-1">WhatsApp or call</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <Phone className="text-primary mt-1 shrink-0" size={24} />
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">Manager</h4>
+                    <a
+                      href="https://wa.me/66632686289"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-muted-foreground font-light hover:text-primary transition-colors block"
+                    >
+                      +66 063 268 6289
+                    </a>
+                    <p className="text-xs text-muted-foreground/60 mt-1">Text or WhatsApp</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -554,7 +572,7 @@ export function Home() {
               <div className="mt-12 pt-10 border-t border-border">
                 <p className="text-sm text-muted-foreground mb-4 font-medium uppercase tracking-wider">Also available on</p>
                 <div className="flex gap-6 text-foreground/60 font-serif italic text-lg">
-                  <a href="#" className="hover:text-primary transition-colors">Booking.com</a>
+                  <a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Booking.com</a>
                   <a href="#" className="hover:text-primary transition-colors">Agoda</a>
                   <a href="#" className="hover:text-primary transition-colors">Airbnb</a>
                 </div>
@@ -632,10 +650,10 @@ export function Home() {
           <div>
             <h5 className="font-bold tracking-widest uppercase text-sm mb-6 text-white">Connect</h5>
             <ul className="space-y-4 text-background/60 font-light">
-              <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
+              <li><a href="https://www.instagram.com/m2rooms/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">TripAdvisor</a></li>
-              <li><a href="https://wa.me/66XXXXXXXXX" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
+              <li><a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Booking.com</a></li>
+              <li><a href="https://wa.me/66982221682" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
             </ul>
           </div>
         </div>
