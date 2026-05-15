@@ -56,7 +56,7 @@ export function Navbar() {
             <img
               src={logoImg}
               alt="M2 Rooms & Stays logo"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 drop-shadow-sm"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0 drop-shadow-sm cursor-pointer transition-transform duration-200 group-hover:scale-105"
             />
 
             {/* Name stack — hidden on small phones, visible sm+ */}
