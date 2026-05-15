@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "M2 Rooms & Stays Patong"
+version = "1.0.0"
+id = "artifacts/m2-hotel"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19807
+
+[services.development]
+run = "pnpm --filter @workspace/m2-hotel run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/m2-hotel", "run", "build" ]
+publicDir = "artifacts/m2-hotel/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19807"
+BASE_PATH = "/"

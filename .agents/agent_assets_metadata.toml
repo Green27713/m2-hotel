@@ -1,0 +1,50 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "LIV1y0lVF68hE2kx_JKX6"
+uri = "file://artifacts/m2-hotel/src/assets/hero.png"
+type = "image"
+title = "Hotel pool at sunset"
+
+[[generated]]
+id = "l_V811L1gwocwfDm8GG5V"
+uri = "file://artifacts/m2-hotel/src/assets/room1.png"
+type = "image"
+title = "Deluxe Room"
+
+[[generated]]
+id = "pS-MlNSS0IyCYELZdyWJh"
+uri = "file://artifacts/m2-hotel/src/assets/room2.png"
+type = "image"
+title = "Superior Room"
+
+[[generated]]
+id = "cjUUwn5M55mMi0tsekpJc"
+uri = "file://artifacts/m2-hotel/src/assets/room3.png"
+type = "image"
+title = "Family Suite"
+
+[[generated]]
+id = "LISF1RUzh8NvdvXRVb0xt"
+uri = "file://artifacts/m2-hotel/src/assets/attraction1.png"
+type = "image"
+title = "Patong Beach"
+
+[[generated]]
+id = "fTeWYtyuavZyWTrfH7PO6"
+uri = "file://artifacts/m2-hotel/src/assets/attraction2.png"
+type = "image"
+title = "Bangla Road"
+
+[[generated]]
+id = "jBs0RQFBAZRs8SUb8gOhG"
+uri = "file://artifacts/m2-hotel/src/assets/attraction3.png"
+type = "image"
+title = "Wat Chalong Temple"
+
+[[generated]]
+id = "I4lTQDlQlL3uEIqO54rWW"
+uri = "file://artifacts/m2-hotel/src/assets/attraction4.png"
+type = "image"
+title = "Big Buddha Phuket"

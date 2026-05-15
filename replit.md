@@ -1,44 +1,60 @@
-# [Project name]
+# M2 Rooms & Stays Patong
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A full hotel website for M2 Rooms & Stays, a boutique guesthouse-hotel in Patong Beach, Phuket, Thailand.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/m2-hotel run dev` — run the hotel website (frontend only, no backend)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Frontend: React + Vite + Tailwind CSS
+- UI: shadcn/ui components + Radix primitives
+- Animation: Framer Motion
+- Map: React Leaflet (Leaflet.js)
+- Weather: Open-Meteo API (free, no key)
+- Fonts: Playfair Display (headings) + Lato (body)
+- Build: Vite static build
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/m2-hotel/src/App.tsx` — main app and routing
+- `artifacts/m2-hotel/src/index.css` — theme (HSL CSS variables) and global styles
+- `artifacts/m2-hotel/src/pages/` — page components
+- `artifacts/m2-hotel/src/components/` — shared UI components
+- `attached_assets/` — generated and uploaded images
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Presentation-first site: no backend, no OpenAPI, no database. Fully static.
+- Weather data fetched client-side from Open-Meteo (free, no API key needed).
+- Map uses React Leaflet with OpenStreetMap/CartoDB tiles (free, no API key).
+- Single page app with wouter routing — all content on "/" as scrollable sections.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+A full hotel marketing website for M2 Rooms & Stays Patong. Features: hero section, rooms showcase, live weather widget, interactive map with local attractions, amenities, local area guide, guest reviews, FAQ, owner's content guide, contact form, and footer.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Site should blend Shangri-La luxury aesthetic with Lub D's fun/playful energy
+- Warm tropical colour palette: deep teal primary, gold/amber accent, cream background
+- Fully responsive (mobile + desktop)
+- Playfair Display for headings, Lato for body text
+- No emojis in UI
+- Weather widget for Patong Beach, Phuket (Open-Meteo API)
+- Interactive map they can update with hotel location + points of interest
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Always add Google Fonts `@import url(...)` as the VERY FIRST LINE of index.css — PostCSS fails silently if it appears after other imports
+- Leaflet requires CSS import (`leaflet/dist/leaflet.css`) and default icon fix (delete `_getIconUrl`, merge options)
+- All CSS custom properties in index.css were initialised to `red` placeholder — must all be replaced before components render
+- Weather: use Open-Meteo API — free, no key: https://api.open-meteo.com/v1/forecast?latitude=7.8956&longitude=98.2978&current=...
 
 ## Pointers
 
