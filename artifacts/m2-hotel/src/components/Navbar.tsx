@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Menu, X, PhoneCall } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import logoImg from "@/assets/M2_Logo_transparent.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -52,21 +53,11 @@ export function Navbar() {
 
           {/* Brand identity */}
           <Link href="/" className="flex items-center gap-3 group" data-testid="link-home">
-            {/* Logo placeholder — swap src for real logo when uploaded */}
-            <div
-              className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                isScrolled ? "border-primary" : "border-white/70"
-              }`}
-              aria-label="M2 logo"
-            >
-              <span
-                className={`font-serif font-bold text-lg leading-none transition-colors ${
-                  isScrolled ? "text-primary" : "text-white"
-                }`}
-              >
-                M2
-              </span>
-            </div>
+            <img
+              src={logoImg}
+              alt="M2 Rooms & Stays logo"
+              className="w-11 h-11 object-contain shrink-0 drop-shadow-sm"
+            />
 
             {/* Name stack */}
             <div className="flex flex-col leading-tight">

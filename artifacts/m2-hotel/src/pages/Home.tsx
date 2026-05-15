@@ -1,128 +1,223 @@
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { WeatherWidget } from "@/components/Weather";
 import { Map } from "@/components/Map";
-import { 
-  Wifi, Waves, Wind, Clock, ConciergeBell, Plane, 
-  Map as MapIcon, Coffee, ChevronRight, Star, 
-  MapPin, Phone, Mail, ChevronDown
+import { ReviewCarousel } from "@/components/ReviewCarousel";
+import { Blog } from "@/components/Blog";
+import { Game } from "@/components/Game";
+import {
+  Wifi, Wind, Clock, Plane,
+  Map as MapIcon, ChevronRight, Star,
+  MapPin, Phone, Mail, Tv, Refrigerator, Thermometer,
+  Shield,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-// Images
-import heroImg from "@/assets/hero.png";
-import room1Img from "@/assets/room1.png";
-import room2Img from "@/assets/room2.png";
-import room3Img from "@/assets/room3.png";
+// Real hotel photos (enhanced)
+import heroSlide1 from "@/assets/M2_room_small_enhanced.jpg";
+import heroSlide2 from "@/assets/M2_room_deluxe_enhanced.jpg";
+import heroSlide3 from "@/assets/M2_lobby_enhanced.jpg";
+import exteriorImg from "@/assets/M2_exterior_enhanced.jpg";
+import lobbyImg from "@/assets/M2_lobby_enhanced.jpg";
+import deluxeImg from "@/assets/M2_room_deluxe_enhanced.jpg";
+import superiorImg from "@/assets/M2_superior_enhanced.jpg";
+import superiorLampImg from "@/assets/M2_superior_lamp_enhanced.jpg";
+import deluxe2Img from "@/assets/M2_deluxe2_enhanced.jpg";
+import areaImg from "@/assets/M2_area_enhanced.jpg";
+import moodImg from "@/assets/M2_room_mood_enhanced.jpg";
+
+// AI-generated attraction images (kept as placeholders until real photos provided)
 import attr1Img from "@/assets/attraction1.png";
 import attr2Img from "@/assets/attraction2.png";
 import attr3Img from "@/assets/attraction3.png";
 import attr4Img from "@/assets/attraction4.png";
 
+const heroSlides = [
+  { img: heroSlide1, label: "Sun-drenched rooms with balcony views" },
+  { img: heroSlide2, label: "Spacious, modern interiors" },
+  { img: heroSlide3, label: "Warm lobby lounge — work or unwind" },
+];
+
 const fadeIn = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.2 }
-  }
+  visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
 };
+
+function HeroSlideshow() {
+  const [current, setCurrent] = useState(0);
+
+  const next = useCallback(() => {
+    setCurrent((c) => (c + 1) % heroSlides.length);
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(next, 6000);
+    return () => clearInterval(t);
+  }, [next]);
+
+  return (
+    <section className="relative h-[100svh] w-full flex items-center justify-center overflow-hidden">
+      {/* Slide images */}
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={current}
+          className="absolute inset-0 z-0"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+        >
+          <div className="absolute inset-0 bg-black/45 z-10" />
+          <img
+            src={heroSlides[current].img}
+            alt={heroSlides[current].label}
+            className="w-full h-full object-cover object-center"
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Content */}
+      <div className="relative z-20 text-center px-4 max-w-4xl mx-auto mt-20">
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase text-white/70 mb-6"
+        >
+          Patong Beach · Phuket · Thailand
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.25 }}
+          className="font-serif text-5xl md:text-7xl lg:text-8xl text-white font-medium mb-6 drop-shadow-lg leading-tight"
+        >
+          A Secret <br className="md:hidden" /> By The Sea
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.45 }}
+          className="text-lg md:text-2xl text-white/85 font-light mb-10 max-w-2xl mx-auto tracking-wide"
+        >
+          Intimate guesthouse warmth meets boutique-hotel polish,
+          steps from the electric energy of Patong Beach.
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.65 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
+          <a
+            href="#rooms"
+            data-testid="button-explore-rooms"
+            className="inline-block px-8 py-4 bg-primary text-primary-foreground text-sm font-bold tracking-[0.2em] uppercase transition-all hover:bg-primary/90"
+          >
+            Explore Our Rooms
+          </a>
+          <a
+            href="#contact"
+            className="inline-block px-8 py-4 bg-white/15 border border-white/50 text-white text-sm font-bold tracking-[0.2em] uppercase transition-all hover:bg-white/25 backdrop-blur-sm"
+          >
+            Book Direct
+          </a>
+        </motion.div>
+      </div>
+
+      {/* Slide dots */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {heroSlides.map((_, i) => (
+          <button
+            key={i}
+            data-testid={`dot-hero-${i}`}
+            onClick={() => setCurrent(i)}
+            className={`transition-all duration-300 h-1 rounded-full ${
+              i === current ? "w-8 bg-white" : "w-2 bg-white/40"
+            }`}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/60"
+      >
+        <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
+        <div className="w-[1px] h-10 bg-gradient-to-b from-white/60 to-transparent" />
+      </motion.div>
+    </section>
+  );
+}
 
 export function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       <Navbar />
 
-      {/* 1. Hero Section */}
-      <section className="relative h-[100svh] w-full flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-black/40 z-10" />
-          <motion.img 
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 10, ease: "easeOut" }}
-            src={heroImg} 
-            alt="M2 Rooms & Stays" 
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-        
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto mt-20">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-serif text-5xl md:text-7xl lg:text-8xl text-white font-medium mb-6 drop-shadow-lg"
-          >
-            A Secret <br className="md:hidden" /> By The Sea
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-2xl text-white/90 font-light mb-10 max-w-2xl mx-auto tracking-wide"
-          >
-            Intimate guesthouse warmth meets boutique-hotel polish, steps from the electric energy of Patong Beach.
-          </motion.p>
+      {/* 1. Hero — Cinematic Slideshow */}
+      <HeroSlideshow />
+
+      {/* 2. About */}
+      <section id="about" className="py-24 md:py-32 px-4 md:px-8 bg-card">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeIn}
           >
-            <a 
-              href="#rooms" 
-              className="inline-block px-8 py-4 bg-primary text-primary-foreground text-sm font-bold tracking-[0.2em] uppercase transition-all hover:bg-primary/90 hover:scale-105"
-            >
-              Explore Our Rooms
-            </a>
+            <h2 className="text-sm font-bold tracking-[0.2em] text-primary uppercase mb-6">Welcome to M2</h2>
+            <h3 className="font-serif text-3xl md:text-5xl font-medium leading-tight mb-8 text-foreground">
+              Where local Thai warmth<br className="hidden md:inline" /> embraces modern comfort.
+            </h3>
+            <p className="text-lg text-muted-foreground leading-relaxed font-light mb-6">
+              Tucked just a five-minute stroll from the sun-drenched sands of Patong Beach, M2 Rooms & Stays is a sanctuary for the modern traveller. We believe you shouldn't have to choose between the personal touch of a guesthouse and the refined polish of a boutique hotel. Here, you get both.
+            </p>
+            <p className="text-base text-muted-foreground leading-relaxed font-light mb-10">
+              Known to locals as M2 Room For Rent, we've been welcoming guests with genuine Thai hospitality for years. Every room is thoughtfully designed, spotlessly maintained, and just steps from everything Patong has to offer.
+            </p>
+            <div className="flex flex-wrap gap-6 text-sm font-medium tracking-widest uppercase text-foreground/70">
+              <span className="flex items-center gap-2"><MapPin size={17} className="text-secondary shrink-0" /> 5 Min to Beach</span>
+              <span className="flex items-center gap-2"><Clock size={17} className="text-secondary shrink-0" /> On-Call Reception</span>
+              <span className="flex items-center gap-2"><Wifi size={17} className="text-secondary shrink-0" /> Free Fast WiFi</span>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <img
+              src={exteriorImg}
+              alt="M2 Room For Rent entrance"
+              className="w-full object-cover shadow-xl"
+              style={{ maxHeight: "520px" }}
+            />
+            <div className="absolute -bottom-4 -left-4 bg-primary text-primary-foreground px-6 py-4 hidden md:block">
+              <p className="text-xs tracking-widest uppercase font-bold text-primary-foreground/70 mb-1">Also known as</p>
+              <p className="font-serif text-lg font-medium">M2 Room For Rent</p>
+            </div>
           </motion.div>
         </div>
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/70"
-        >
-          <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-white/70 to-transparent" />
-        </motion.div>
       </section>
 
-      {/* 2. About Section */}
-      <section id="about" className="py-24 md:py-32 px-4 md:px-8 bg-card">
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeIn}
-          className="max-w-4xl mx-auto text-center"
-        >
-          <h2 className="text-sm font-bold tracking-[0.2em] text-primary uppercase mb-6">Welcome to M2</h2>
-          <h3 className="font-serif text-3xl md:text-5xl font-medium leading-tight mb-8 text-foreground">
-            Where local Thai warmth embraces modern comfort.
-          </h3>
-          <p className="text-lg text-muted-foreground leading-relaxed font-light mb-12">
-            Tucked just a five-minute stroll from the sun-drenched sands of Patong Beach, M2 Rooms & Stays is a sanctuary for the modern traveller. We built this space because we believe you shouldn't have to choose between the personal touch of a guesthouse and the refined polish of a boutique hotel. Here, you get both. Unhurried, vibrant, and perfectly placed.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm font-medium tracking-widest uppercase text-foreground/70">
-            <span className="flex items-center gap-2"><MapPin size={18} className="text-secondary" /> 5 Min to Beach</span>
-            <span className="hidden sm:inline">•</span>
-            <span className="flex items-center gap-2"><Clock size={18} className="text-secondary" /> 24hr Reception</span>
-            <span className="hidden sm:inline">•</span>
-            <span className="flex items-center gap-2"><Coffee size={18} className="text-secondary" /> Thai Breakfast</span>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* 3. Rooms Section */}
+      {/* 3. Rooms */}
       <section id="rooms" className="py-24 md:py-32 px-4 md:px-8 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -131,11 +226,11 @@ export function Home() {
               <h3 className="font-serif text-4xl md:text-5xl font-medium">Rest & Recharge</h3>
             </div>
             <p className="text-muted-foreground max-w-md font-light">
-              Each room is a sun-filled retreat designed with rich textures, crisp linens, and thoughtful amenities.
+              Every room is a clean, sun-filled retreat with modern furniture, crisp linens, and all the essentials.
             </p>
           </div>
 
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -145,29 +240,34 @@ export function Home() {
             {[
               {
                 name: "Deluxe Room",
-                img: room1Img,
-                features: ["King Bed", "En-suite", "Air Con", "City View"],
-                price: "฿1,200"
+                img: deluxeImg,
+                features: ["King Bed", "En-suite Bathroom", "Air Conditioning", "Flat-screen TV", "Refrigerator", "City View"],
+                price: "฿1,200",
               },
               {
                 name: "Superior Room",
-                img: room2Img,
-                features: ["Queen Bed", "Balcony", "Air Con", "Mini-bar"],
-                price: "฿1,500"
+                img: superiorImg,
+                features: ["Queen Bed", "Private Balcony", "Air Conditioning", "Flat-screen TV", "Wardrobe", "Kettle"],
+                price: "฿1,500",
               },
               {
-                name: "Family Suite",
-                img: room3Img,
-                features: ["2 Bedrooms", "Lounge Area", "En-suite", "Balcony"],
-                price: "฿2,800"
-              }
+                name: "Superior Room (King)",
+                img: superiorLampImg,
+                features: ["King Bed", "Reading Nook", "Air Conditioning", "Flat-screen TV", "Refrigerator", "Work Desk"],
+                price: "฿1,800",
+              },
             ].map((room, i) => (
-              <motion.div key={i} variants={fadeIn} className="group relative bg-card border border-border/50 overflow-hidden">
+              <motion.div
+                key={i}
+                variants={fadeIn}
+                data-testid={`card-room-${i}`}
+                className="group relative bg-card border border-border/50 overflow-hidden"
+              >
                 <div className="relative h-64 md:h-80 overflow-hidden">
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10" />
-                  <img 
-                    src={room.img} 
-                    alt={room.name} 
+                  <img
+                    src={room.img}
+                    alt={room.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute top-4 right-4 z-20 bg-background/90 backdrop-blur px-3 py-1 text-sm font-medium tracking-wide">
@@ -175,28 +275,42 @@ export function Home() {
                   </div>
                 </div>
                 <div className="p-6 md:p-8">
-                  <h4 className="font-serif text-2xl font-medium mb-3 group-hover:text-primary transition-colors">{room.name}</h4>
+                  <h4 className="font-serif text-2xl font-medium mb-3 group-hover:text-primary transition-colors">
+                    {room.name}
+                  </h4>
                   <ul className="flex flex-wrap gap-x-4 gap-y-2 mb-8 text-sm text-muted-foreground font-light">
-                    {room.features.map(f => (
+                    {room.features.map((f) => (
                       <li key={f} className="flex items-center gap-1.5">
                         <div className="w-1 h-1 rounded-full bg-secondary" /> {f}
                       </li>
                     ))}
                   </ul>
-                  <a href="#contact" className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.1em] uppercase text-primary hover:text-secondary transition-colors">
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.1em] uppercase text-primary hover:text-secondary transition-colors"
+                  >
                     Book Now <ChevronRight size={16} />
                   </a>
                 </div>
               </motion.div>
             ))}
           </motion.div>
+
+          {/* Room gallery strip */}
+          <div className="mt-12 grid grid-cols-3 gap-3">
+            {[deluxe2Img, moodImg, lobbyImg].map((img, i) => (
+              <div key={i} className="aspect-video overflow-hidden">
+                <img src={img} alt="M2 room detail" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 6. Amenities Section */}
-      <section className="py-24 px-4 md:px-8 bg-card border-y border-border">
+      {/* 4. Amenities */}
+      <section id="amenities" className="py-24 px-4 md:px-8 bg-card border-y border-border">
         <div className="max-w-7xl mx-auto">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -206,17 +320,17 @@ export function Home() {
             <h2 className="font-serif text-3xl md:text-4xl font-medium mb-4">Thoughtful Touches</h2>
             <p className="text-muted-foreground font-light">Everything you need for a seamless stay.</p>
           </motion.div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-6 text-center">
             {[
-              { icon: Wifi, label: "Fast Free WiFi" },
-              { icon: Waves, label: "Swimming Pool" },
-              { icon: Wind, label: "Air Conditioning" },
-              { icon: Clock, label: "24hr Reception" },
-              { icon: ConciergeBell, label: "Room Service" },
-              { icon: Plane, label: "Airport Transfer" },
-              { icon: MapIcon, label: "Rooftop Terrace" },
-              { icon: Coffee, label: "Thai Breakfast" }
+              { icon: Wifi,         label: "Free High-Speed WiFi" },
+              { icon: Wind,         label: "Air Conditioning" },
+              { icon: Tv,           label: "Flat-screen TV" },
+              { icon: Refrigerator, label: "Refrigerator" },
+              { icon: Thermometer,  label: "Hot Water Shower" },
+              { icon: Clock,        label: "On-Call Reception" },
+              { icon: Plane,        label: "Airport Transfer (fee)" },
+              { icon: Shield,       label: "Secure Key-Card Entry" },
             ].map((amenity, i) => (
               <div key={i} className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-2 transition-transform hover:scale-110">
@@ -229,7 +343,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* 4 & 5. Location & Weather */}
+      {/* 5. Location & Weather */}
       <section id="location" className="py-24 md:py-32 px-4 md:px-8 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
@@ -238,12 +352,11 @@ export function Home() {
                 <h2 className="text-sm font-bold tracking-[0.2em] text-primary uppercase mb-4">Location</h2>
                 <h3 className="font-serif text-4xl font-medium mb-6">Explore Patong</h3>
                 <p className="text-muted-foreground font-light mb-8">
-                  Perfectly positioned. Quiet enough for a peaceful sleep, but just a short walk to the vibrant heart of Phuket.
+                  Perfectly positioned. Quiet enough for a peaceful sleep, just a short walk to Patong Beach, the night markets, and the heart of Phuket.
                 </p>
               </div>
               <WeatherWidget />
             </div>
-            
             <div className="lg:col-span-8 shadow-sm">
               <Map />
             </div>
@@ -251,12 +364,19 @@ export function Home() {
         </div>
       </section>
 
-      {/* 7. Local Guide */}
-      <section className="py-24 md:py-32 px-4 md:px-8 bg-card border-t border-border">
+      {/* 6. Local Area */}
+      <section id="attractions" className="py-24 md:py-32 px-4 md:px-8 bg-card border-t border-border">
         <div className="max-w-7xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl font-medium mb-12 text-center">Nearby Highlights</h2>
-          
-          <motion.div 
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-sm font-bold tracking-[0.2em] text-primary uppercase mb-4">Local Guide</h2>
+              <h3 className="font-serif text-4xl md:text-5xl font-medium">Nearby Highlights</h3>
+            </div>
+            <p className="text-muted-foreground max-w-md font-light">
+              Our team knows every corner of Patong. Ask us anything.
+            </p>
+          </div>
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -264,16 +384,16 @@ export function Home() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {[
-              { img: attr1Img, name: "Patong Beach", desc: "5 mins walk" },
-              { img: attr2Img, name: "Bangla Road", desc: "10 mins walk" },
-              { img: attr3Img, name: "Wat Chalong", desc: "25 mins drive" },
-              { img: attr4Img, name: "Big Buddha", desc: "35 mins drive" }
+              { img: attr1Img, name: "Patong Beach", desc: "5 min walk · The main beach strip" },
+              { img: areaImg,  name: "Bangla Road & Town", desc: "10 min walk · Nightlife & street food" },
+              { img: attr3Img, name: "Wat Chalong Temple", desc: "25 min drive · Sacred Buddhist temple" },
+              { img: attr4Img, name: "Big Buddha Phuket", desc: "35 min drive · Stunning island views" },
             ].map((attr, i) => (
-              <motion.div key={i} variants={fadeIn} className="group cursor-pointer">
+              <motion.div key={i} variants={fadeIn} data-testid={`card-attraction-${i}`} className="group cursor-pointer">
                 <div className="overflow-hidden mb-4 relative aspect-[4/3]">
-                  <img 
-                    src={attr.img} 
-                    alt={attr.name} 
+                  <img
+                    src={attr.img}
+                    alt={attr.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
@@ -286,75 +406,54 @@ export function Home() {
         </div>
       </section>
 
-      {/* 8. Reviews */}
-      <section id="reviews" className="py-24 md:py-32 px-4 md:px-8 bg-primary text-primary-foreground">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-16">Guest Book</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            {[
-              {
-                text: "An absolute gem! The staff went out of their way to make us feel at home. The room was spotless and beautifully designed. Will definitely return.",
-                name: "Sarah Jenkins",
-                loc: "Australia",
-                date: "Oct 2023"
-              },
-              {
-                text: "Perfect location. It's tucked away just enough to be quiet at night, but a quick walk to the beach and Bangla Road. The rooftop terrace is lovely at sunset.",
-                name: "Marco Rossi",
-                loc: "Italy",
-                date: "Jan 2024"
-              },
-              {
-                text: "The best guesthouse experience I've had in Thailand. Felt like a luxury hotel but with the personal warmth you only get from smaller properties.",
-                name: "Emma Wood",
-                loc: "UK",
-                date: "Feb 2024"
-              },
-              {
-                text: "Unbeatable value. The Thai breakfast alone was worth it! Highly recommend the Deluxe rooms with the city view.",
-                name: "David Chen",
-                loc: "Singapore",
-                date: "Mar 2024"
-              }
-            ].map((review, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-primary-foreground/5 p-8 text-left backdrop-blur-sm border border-primary-foreground/10"
-              >
-                <div className="flex gap-1 text-secondary mb-6">
-                  {[...Array(5)].map((_, j) => <Star key={j} size={16} fill="currentColor" />)}
-                </div>
-                <p className="text-lg font-serif italic leading-relaxed mb-6">"{review.text}"</p>
-                <div>
-                  <p className="font-bold text-sm tracking-wide">{review.name}</p>
-                  <p className="text-xs text-primary-foreground/70">{review.loc} • {review.date}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 7. Reviews Carousel */}
+      <ReviewCarousel />
 
-      {/* 9 & 10. FAQ & Owner Tips */}
-      <section className="py-24 px-4 md:px-8 bg-background">
+      {/* 8. Blog */}
+      <Blog />
+
+      {/* 9. Quiz Game */}
+      <Game />
+
+      {/* 10. FAQ & Owner Tips */}
+      <section className="py-24 px-4 md:px-8 bg-card border-t border-border">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl font-medium mb-12 text-center">Frequently Asked Questions</h2>
-          
+          <h2 className="font-serif text-3xl md:text-4xl font-medium mb-12 text-center">
+            Frequently Asked Questions
+          </h2>
+
           <Accordion type="single" collapsible className="w-full mb-20">
             {[
-              { q: "What time is check-in and check-out?", a: "Check-in is from 2:00 PM, and check-out is until 12:00 PM (noon). Early check-in or late check-out can be requested, subject to availability." },
-              { q: "Is breakfast included?", a: "Yes, a complimentary authentic Thai or Continental breakfast is included with all direct bookings." },
-              { q: "Do you arrange airport transfers?", a: "We certainly do. We can arrange a private taxi or minivan from Phuket International Airport directly to our door. Please contact us with your flight details." },
-              { q: "How far is the beach?", a: "Patong Beach is approximately a 5-7 minute walk from M2 Rooms & Stays. We provide complimentary beach towels." },
-              { q: "Is the Wi-Fi reliable for working?", a: "Absolutely. We offer free high-speed fiber internet throughout the property, suitable for video calls and remote work." }
+              {
+                q: "What time is check-in and check-out?",
+                a: "Check-in is from 2:00 PM and check-out is by 12:00 PM (noon). Early check-in or late check-out can be requested and we'll do our best to accommodate, subject to availability.",
+              },
+              {
+                q: "Is there after-hours reception?",
+                a: "Yes — our reception team is on call 24 hours. If you arrive late or need assistance outside regular hours, simply call the number provided at check-in and someone will be with you promptly.",
+              },
+              {
+                q: "Can you arrange airport transfers?",
+                a: "We can arrange a private taxi or minivan from Phuket International Airport directly to our door. A fee applies. Please contact us with your flight details and we'll organise everything.",
+              },
+              {
+                q: "How far is the beach?",
+                a: "Patong Beach is approximately a 5-7 minute walk from M2 Rooms & Stays. It's one of our favourite things about the location — close enough to pop back to the room between swims.",
+              },
+              {
+                q: "Is the Wi-Fi reliable for remote work?",
+                a: "Absolutely. We provide free high-speed internet throughout the property, suitable for video calls and remote work. The lobby lounge is a great spot to work with coffee nearby.",
+              },
+              {
+                q: "What's included in the room?",
+                a: "All rooms include air conditioning, flat-screen TV, refrigerator, hot water shower, wardrobe or closet, free WiFi, and fresh towels. Rooms with balconies have outdoor seating.",
+              },
             ].map((faq, i) => (
               <AccordionItem key={i} value={`item-${i}`} className="border-border">
-                <AccordionTrigger className="text-left font-medium hover:text-primary transition-colors text-lg py-6">
+                <AccordionTrigger
+                  data-testid={`faq-trigger-${i}`}
+                  className="text-left font-medium hover:text-primary transition-colors text-lg py-6"
+                >
                   {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed text-base pb-6">
@@ -364,26 +463,25 @@ export function Home() {
             ))}
           </Accordion>
 
-          {/* 10. Owner Tips Section */}
+          {/* Owner Tips */}
           <div className="mt-12 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 p-1">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="owner-tips" className="border-none">
                 <AccordionTrigger className="text-left font-serif text-xl px-6 py-4 hover:no-underline text-amber-900 dark:text-amber-500">
-                  <span className="flex items-center gap-2">
-                    For the Owner: Keeping Your Website Engaging
-                  </span>
+                  For the Owner: Keeping Your Website Engaging
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-6 text-amber-800/80 dark:text-amber-200/80">
-                  <div className="space-y-4">
-                    <p>Use these actionable tips to keep your site fresh and drive more direct bookings:</p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li><strong>Update Rates Seasonally:</strong> Adjust the prices in the <em>Rooms</em> section to reflect High Season (Nov–Apr) and Low Season (May–Oct).</li>
-                      <li><strong>Promote Offers:</strong> Add a banner to the top of the site during slow months (e.g., "Stay 3 Nights, Get 1 Free").</li>
-                      <li><strong>Refresh Photography:</strong> Every 6 months, update the hero image with new sunny shots of the property to show it's actively maintained.</li>
-                      <li><strong>Map Updates:</strong> If a new popular restaurant opens nearby, update the <code>markers</code> array in the <code>Map.tsx</code> file to feature it.</li>
-                      <li><strong>Guest Reviews:</strong> Rotate the guest testimonials every few months. Fresh dates show potential guests that people love staying here <em>right now</em>.</li>
-                      <li><strong>Social Media:</strong> Ensure your Instagram link in the footer points to your latest posts. Remind guests at checkout to tag you!</li>
-                      <li><strong>SEO Tip:</strong> Keep your written content (About section) rich with keywords like "Patong Beach guesthouse", "Phuket boutique hotel", without sounding unnatural.</li>
+                  <div className="space-y-4 text-sm leading-relaxed">
+                    <p>Use these tips to keep your site fresh and drive more direct bookings:</p>
+                    <ul className="list-disc pl-5 space-y-3">
+                      <li><strong>Update Rates Seasonally:</strong> Adjust prices in the Rooms section for High Season (Nov–Apr) and Low Season (May–Oct). Guests notice when prices look outdated.</li>
+                      <li><strong>Add Promotions:</strong> During slow months, add a small banner at the top of the page (e.g., "Stay 3 nights, 4th night free"). Ask your developer to add a dismissible banner above the navbar.</li>
+                      <li><strong>Refresh Photos:</strong> Every 6 months, update 1-2 room photos with fresh shots. Even small changes (new cushions, better lighting) photograph well and signal an active property.</li>
+                      <li><strong>Update the Map:</strong> When a new restaurant or attraction opens nearby, update the <code>markers</code> array in <code>src/components/Map.tsx</code>. Just change the coordinates and label.</li>
+                      <li><strong>Rotate Reviews:</strong> Update the reviews in <code>src/components/ReviewCarousel.tsx</code> every few months. Copy real reviews from Booking.com or Agoda — fresh dates build trust.</li>
+                      <li><strong>Blog Posts:</strong> Adding a new blog post every 1-2 months helps with Google search ranking. Seasonal guides ("Best things to do in Patong in December") work very well.</li>
+                      <li><strong>Social Media Tie-In:</strong> Ask every happy guest to tag @M2RoomsAndStays on Instagram. Update your footer Instagram link to point to your latest profile.</li>
+                      <li><strong>SEO:</strong> Keep the About text rich with natural phrases like "Patong Beach guesthouse", "boutique hotel Phuket", "rooms near Patong Beach Thailand".</li>
                     </ul>
                   </div>
                 </AccordionContent>
@@ -393,8 +491,8 @@ export function Home() {
         </div>
       </section>
 
-      {/* 11. Contact & Booking */}
-      <section id="contact" className="py-24 md:py-32 px-4 md:px-8 bg-card border-t border-border">
+      {/* 11. Contact */}
+      <section id="contact" className="py-24 md:py-32 px-4 md:px-8 bg-background border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
@@ -406,81 +504,90 @@ export function Home() {
 
               <div className="space-y-8">
                 <div className="flex items-start gap-4">
-                  <MapPin className="text-primary mt-1" size={24} />
+                  <MapPin className="text-primary mt-1 shrink-0" size={24} />
                   <div>
-                    <h4 className="font-medium text-lg mb-1">M2 Rooms and Stays</h4>
+                    <h4 className="font-medium text-lg mb-1">M2 Room For Rent / M2 Rooms & Stays</h4>
                     <p className="text-muted-foreground font-light">
                       Patong, Phuket 83150<br />Thailand
                     </p>
                   </div>
                 </div>
-                
                 <div className="flex items-start gap-4">
-                  <Phone className="text-primary mt-1" size={24} />
+                  <Phone className="text-primary mt-1 shrink-0" size={24} />
                   <div>
                     <h4 className="font-medium text-lg mb-1">WhatsApp / Phone</h4>
-                    <a href="https://wa.me/66XXXXXXXXX" target="_blank" rel="noreferrer" className="text-muted-foreground font-light hover:text-primary transition-colors">
+                    <a
+                      href="https://wa.me/66XXXXXXXXX"
+                      target="_blank"
+                      rel="noreferrer"
+                      data-testid="link-whatsapp"
+                      className="text-muted-foreground font-light hover:text-primary transition-colors"
+                    >
                       +66 XX XXX XXXX
                     </a>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-4">
-                  <Mail className="text-primary mt-1" size={24} />
+                  <Mail className="text-primary mt-1 shrink-0" size={24} />
                   <div>
                     <h4 className="font-medium text-lg mb-1">Email</h4>
-                    <a href="mailto:hello@m2rooms.com" className="text-muted-foreground font-light hover:text-primary transition-colors">
+                    <a
+                      href="mailto:hello@m2rooms.com"
+                      className="text-muted-foreground font-light hover:text-primary transition-colors"
+                    >
                       hello@m2rooms.com
                     </a>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-16 pt-12 border-t border-border">
+              <div className="mt-12 pt-10 border-t border-border">
                 <p className="text-sm text-muted-foreground mb-4 font-medium uppercase tracking-wider">Also available on</p>
                 <div className="flex gap-6 text-foreground/60 font-serif italic text-lg">
-                  <span className="hover:text-primary transition-colors cursor-pointer">Booking.com</span>
-                  <span className="hover:text-primary transition-colors cursor-pointer">Agoda</span>
-                  <span className="hover:text-primary transition-colors cursor-pointer">Airbnb</span>
+                  <a href="#" className="hover:text-primary transition-colors">Booking.com</a>
+                  <a href="#" className="hover:text-primary transition-colors">Agoda</a>
+                  <a href="#" className="hover:text-primary transition-colors">Airbnb</a>
                 </div>
               </div>
             </div>
 
-            <Card className="bg-background border-border/50 shadow-lg">
+            <Card className="bg-card border-border/50 shadow-lg">
               <CardContent className="p-8 md:p-10">
                 <h4 className="font-serif text-2xl font-medium mb-8">Send an Enquiry</h4>
                 <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Name</label>
-                      <Input placeholder="John Doe" className="bg-card" />
+                      <Input data-testid="input-name" placeholder="Your name" className="bg-background" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Email</label>
-                      <Input type="email" placeholder="john@example.com" className="bg-card" />
+                      <Input data-testid="input-email" type="email" placeholder="your@email.com" className="bg-background" />
                     </div>
                   </div>
-                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Dates</label>
-                      <Input type="text" placeholder="Check-in - Check-out" className="bg-card" />
+                      <label className="text-sm font-medium">Check-in / Check-out</label>
+                      <Input data-testid="input-dates" type="text" placeholder="e.g. 10 Dec – 14 Dec" className="bg-background" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Guests</label>
-                      <Input type="number" placeholder="2" min="1" className="bg-card" />
+                      <Input data-testid="input-guests" type="number" placeholder="2" min="1" className="bg-background" />
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Message</label>
-                    <Textarea 
-                      placeholder="Any special requests or questions?" 
-                      className="bg-card min-h-[120px]" 
+                    <Textarea
+                      data-testid="input-message"
+                      placeholder="Any special requests or questions?"
+                      className="bg-background min-h-[120px]"
                     />
                   </div>
-
-                  <button className="w-full py-4 bg-primary text-primary-foreground font-bold tracking-[0.1em] uppercase hover:bg-primary/90 transition-colors">
+                  <button
+                    data-testid="button-submit-enquiry"
+                    type="submit"
+                    className="w-full py-4 bg-primary text-primary-foreground font-bold tracking-[0.1em] uppercase hover:bg-primary/90 transition-colors"
+                  >
                     Send Request
                   </button>
                 </form>
@@ -494,40 +601,37 @@ export function Home() {
       <footer className="bg-foreground text-background py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
-            <span className="font-serif text-3xl font-bold tracking-tight mb-6 block text-white">
+            <span className="font-serif text-3xl font-bold tracking-tight mb-2 block text-white">
               M2 <span className="font-sans font-light text-2xl">Rooms & Stays</span>
+            </span>
+            <span className="text-xs tracking-widest uppercase text-background/40 mb-6 block">
+              Also known as M2 Room For Rent
             </span>
             <p className="text-background/60 max-w-sm font-light leading-relaxed">
               Your personal sanctuary in Patong Beach. Unhurried, vibrant, and perfectly placed for your Thai adventure.
             </p>
           </div>
-          
           <div>
             <h5 className="font-bold tracking-widest uppercase text-sm mb-6 text-white">Quick Links</h5>
             <ul className="space-y-4 text-background/60 font-light">
-              <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#rooms" className="hover:text-white transition-colors">Our Rooms</a></li>
-              <li><a href="#location" className="hover:text-white transition-colors">Location</a></li>
-              <li><a href="#reviews" className="hover:text-white transition-colors">Guest Reviews</a></li>
+              {[["About", "#about"], ["Rooms", "#rooms"], ["Location", "#location"], ["Blog", "#blog"], ["Contact", "#contact"]].map(([label, href]) => (
+                <li key={label}><a href={href} className="hover:text-white transition-colors">{label}</a></li>
+              ))}
             </ul>
           </div>
-          
           <div>
             <h5 className="font-bold tracking-widest uppercase text-sm mb-6 text-white">Connect</h5>
             <ul className="space-y-4 text-background/60 font-light">
               <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
               <li><a href="#" className="hover:text-white transition-colors">TripAdvisor</a></li>
+              <li><a href="https://wa.me/66XXXXXXXXX" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
             </ul>
           </div>
         </div>
-        
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/40 font-light">
-          <p>&copy; {new Date().getFullYear()} M2 Rooms & Stays. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          </div>
+        <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4 text-background/40 text-xs">
+          <p>© {new Date().getFullYear()} M2 Rooms & Stays · M2 Room For Rent. All rights reserved.</p>
+          <p>Patong, Phuket 83150, Thailand</p>
         </div>
       </footer>
     </div>
