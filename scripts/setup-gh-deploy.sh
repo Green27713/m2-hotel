@@ -1,13 +1,14 @@
 #!/bin/bash
-# Reconstructs the GitHub deploy key from the SSH_DEPLOY_KEY secret.
-# Run this before any git push: bash scripts/setup-gh-deploy.sh && git push ...
+# Reconstructs the GitHub deploy SSH key from .local/ssh/deploy_key (gitignored, workspace-persistent).
+# Run before any git push: bash scripts/setup-gh-deploy.sh && git push ...
 set -e
-if [ -z "$SSH_DEPLOY_KEY" ]; then
-  echo "ERROR: SSH_DEPLOY_KEY secret is not set. Add it in Replit Secrets (padlock icon)."
+KEY_FILE="$(dirname "$0")/../.local/ssh/deploy_key"
+if [ ! -f "$KEY_FILE" ]; then
+  echo "ERROR: Deploy key not found at .local/ssh/deploy_key"
   exit 1
 fi
 mkdir -p ~/.ssh
-echo "$SSH_DEPLOY_KEY" | base64 -d > ~/.ssh/m2hotel_deploy
+cp "$KEY_FILE" ~/.ssh/m2hotel_deploy
 chmod 600 ~/.ssh/m2hotel_deploy
 cat > ~/.ssh/config << 'EOF'
 Host github.com
