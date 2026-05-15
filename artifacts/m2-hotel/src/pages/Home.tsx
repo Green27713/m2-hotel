@@ -88,7 +88,7 @@ function HeroSlideshow() {
       </AnimatePresence>
 
       {/* Content */}
-      <div className="relative z-20 text-center px-4 max-w-4xl mx-auto mt-20">
+      <div className="relative z-20 text-center px-4 max-w-4xl mx-auto mt-10 md:mt-20">
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

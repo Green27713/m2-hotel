@@ -59,8 +59,8 @@ export function Navbar() {
               className="w-10 h-10 md:w-14 md:h-14 object-contain shrink-0 drop-shadow-sm"
             />
 
-            {/* Name stack */}
-            <div className="flex flex-col leading-tight">
+            {/* Name stack — hidden on small phones, visible sm+ */}
+            <div className="hidden sm:flex flex-col leading-tight">
               <span
                 className={`font-serif font-bold text-base md:text-xl tracking-wide whitespace-nowrap transition-colors ${
                   isScrolled ? "text-foreground" : "text-white"
