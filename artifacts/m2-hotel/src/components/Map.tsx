@@ -30,8 +30,8 @@ const createIcon = (color: string) => {
 //  3. Copy the two numbers shown (e.g. 7.8981, 98.2960)
 //  4. Replace the values in the M2 marker below
 // ─────────────────────────────────────────────────────────────────────────────
-const HOTEL_LAT = 7.8981;
-const HOTEL_LNG = 98.2958;
+const HOTEL_LAT = 7.895307272033005;
+const HOTEL_LNG = 98.30001749751149;
 
 const markers = [
   {
@@ -76,7 +76,7 @@ export function Map() {
   return (
     <div className="h-[400px] md:h-[500px] w-full rounded-none overflow-hidden border border-border">
       <MapContainer
-        center={[7.8956, 98.2978]}
+        center={[7.895307272033005, 98.30001749751149]}
         zoom={15}
         scrollWheelZoom={false}
         className="h-full w-full"
