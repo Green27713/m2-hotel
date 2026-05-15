@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>M2 Rooms & Stays — Website Operations Manual (SOP)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #1a1a1a; background: #f8f6f1; }
+  .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 56px 64px; box-shadow: 0 2px 24px rgba(0,0,0,0.07); }
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; padding: 24px 32px; max-width: 100%; }
+    .no-print { display: none; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+  }
+  @media (max-width: 700px) { .page { padding: 28px 18px; } }
+
+  /* Header */
+  .doc-header { border-bottom: 3px solid #1a5f6b; padding-bottom: 28px; margin-bottom: 36px; }
+  .doc-header h1 { font-size: 22px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #1a5f6b; margin-bottom: 4px; }
+  .doc-header h2.subtitle { font-size: 17px; font-weight: 600; color: #333; margin-bottom: 18px; border: none; padding: 0; margin-top: 4px; }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 32px; font-size: 13px; color: #555; }
+  .meta-grid span strong { color: #1a1a1a; }
+
+  /* TOC */
+  .toc { background: #f0f7f8; border-left: 4px solid #1a5f6b; padding: 24px 28px; margin-bottom: 48px; border-radius: 0 6px 6px 0; }
+  .toc h2 { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: #1a5f6b; margin-bottom: 14px; border: none; padding: 0; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 5px; font-size: 14px; }
+  .toc a { color: #1a5f6b; text-decoration: none; font-weight: 500; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Sections */
+  h2 { font-size: 17px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1a5f6b; border-top: 2px solid #e0eeef; padding-top: 36px; margin-top: 48px; margin-bottom: 20px; }
+  h3 { font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #555; margin-top: 24px; margin-bottom: 10px; }
+  p { margin-bottom: 12px; color: #333; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; color: #333; }
+  strong { color: #111; }
+  em { color: #555; }
+  code { background: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; padding: 1px 6px; font-size: 13px; font-family: 'Courier New', monospace; color: #c0392b; }
+  pre { background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 16px 18px; font-size: 13px; font-family: 'Courier New', monospace; overflow-x: auto; margin-bottom: 16px; white-space: pre-wrap; }
+  hr { border: none; border-top: 1px solid #e5e5e5; margin: 32px 0; }
+  blockquote { border-left: 3px solid #1a5f6b; padding: 10px 18px; background: #f0f7f8; margin: 16px 0; color: #333; font-style: italic; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13.5px; }
+  th { background: #1a5f6b; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; letter-spacing: 0.03em; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e5e5e5; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7fafb; }
+  tr:hover td { background: #eef5f6; }
+
+  /* Callout boxes */
+  .callout { background: #fff8e1; border-left: 4px solid #f0a500; padding: 14px 18px; margin: 18px 0; border-radius: 0 4px 4px 0; font-size: 14px; }
+  .callout.info { background: #e8f4f8; border-color: #1a5f6b; }
+  .callout.danger { background: #fdecea; border-color: #c0392b; }
+
+  /* Print button */
+  .print-bar { background: #1a5f6b; color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; margin-bottom: 40px; }
+  .print-bar p { color: #fff; margin: 0; font-size: 14px; }
+  .print-bar button { background: #fff; color: #1a5f6b; border: none; padding: 8px 20px; font-weight: 700; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
+  .print-bar button:hover { background: #d4eef1; }
+
+  /* Footer */
+  .doc-footer { border-top: 2px solid #e0eeef; padding-top: 24px; margin-top: 56px; font-size: 12px; color: #888; text-align: center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Print bar -->
+  <div class="print-bar no-print">
+    <p>To save as PDF: click Print &rarr; select "Save as PDF" as the printer</p>
+    <button onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <!-- Header -->
+  <div class="doc-header">
+    <h1>Standard Operating Procedures</h1>
+    <h2 class="subtitle">M2 Rooms &amp; Stays &mdash; Website Operations Manual</h2>
+    <div class="meta-grid">
+      <span><strong>Document ID:</strong> M2-WEB-SOP-001</span>
+      <span><strong>Version:</strong> 1.0</span>
+      <span><strong>Effective Date:</strong> May 2025</span>
+      <span><strong>Owner:</strong> M2 Rooms &amp; Stays, Patong, Phuket</span>
+      <span><strong>Classification:</strong> Internal Use &mdash; Management &amp; Staff</span>
+      <span><strong>Review Date:</strong> November 2025</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#s1">Purpose &amp; Scope</a></li>
+      <li><a href="#s2">Roles &amp; Responsibilities</a></li>
+      <li><a href="#s3">Key File Reference Guide</a></li>
+      <li><a href="#s4">Daily Tasks</a></li>
+      <li><a href="#s5">Weekly Tasks</a></li>
+      <li><a href="#s6">Monthly Tasks</a></li>
+      <li><a href="#s7">Annual Tasks</a></li>
+      <li><a href="#s8">How to Update: Photos</a></li>
+      <li><a href="#s9">How to Update: Prices</a></li>
+      <li><a href="#s10">How to Update: Reviews</a></li>
+      <li><a href="#s11">How to Update: Blog Posts</a></li>
+      <li><a href="#s12">How to Update: Amenities</a></li>
+      <li><a href="#s13">How to Update: the Quiz Game</a></li>
+      <li><a href="#s14">How to Update: Map Location &amp; Pins</a></li>
+      <li><a href="#s15">How to Update: Contact Information</a></li>
+      <li><a href="#s16">Hosting on GitHub Pages (Free)</a></li>
+      <li><a href="#s17">Working with the AI Agent</a></li>
+      <li><a href="#s18">SEO &mdash; Ongoing Optimisation</a></li>
+      <li><a href="#s19">Continuous Improvement Framework</a></li>
+      <li><a href="#s20">Emergency Procedures</a></li>
+      <li><a href="#s21">Glossary</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <h2 id="s1">1. Purpose &amp; Scope</h2>
+  <h3>1.1 Purpose</h3>
+  <p>This SOP establishes standardised procedures for maintaining, updating, and continuously improving the M2 Rooms &amp; Stays website. It ensures that the website remains accurate, current, and effective as a direct booking and marketing tool at all times.</p>
+  <h3>1.2 Scope</h3>
+  <p>This document covers all routine and non-routine website maintenance activities. It applies to:</p>
+  <ul>
+    <li>The property owner</li>
+    <li>The property manager</li>
+    <li>Any designated staff member assigned website duties</li>
+    <li>Any contracted AI agent or developer performing updates</li>
+  </ul>
+  <h3>1.3 Why This Matters</h3>
+  <p>The website is your lowest-cost, highest-return marketing channel. Every hour it shows incorrect prices, outdated photos, or broken contact links costs you direct bookings and drives guests to OTA platforms (Booking.com, Agoda) where you pay 15–20% commission. A well-maintained website pays for itself many times over.</p>
+
+  <!-- 2 -->
+  <h2 id="s2">2. Roles &amp; Responsibilities</h2>
+  <table>
+    <tr><th>Role</th><th>Name / Contact</th><th>Website Responsibility</th></tr>
+    <tr><td>Website Owner</td><td>Property Owner</td><td>Final approval on all changes; annual review</td></tr>
+    <tr><td>Website Manager</td><td>Manager: +66 063 268 6289</td><td>Weekly checks; content updates; photo uploads</td></tr>
+    <tr><td>AI Update Agent</td><td>Replit AI (see Section 17)</td><td>Technical changes, code edits, new features</td></tr>
+    <tr><td>OTA Manager</td><td>TBD</td><td>Sync prices/availability between site and Booking.com/Agoda</td></tr>
+  </table>
+
+  <!-- 3 -->
+  <h2 id="s3">3. Key File Reference Guide</h2>
+  <p>These are the exact files to edit for each type of change. Do not edit any other file unless instructed by the AI agent.</p>
+  <table>
+    <tr><th>What you want to change</th><th>File to open</th><th>Section to find</th></tr>
+    <tr><td>Room names, prices, features</td><td><code>src/pages/Home.tsx</code></td><td>Search for <code>"Deluxe Room"</code></td></tr>
+    <tr><td>Hero slideshow photos</td><td><code>src/pages/Home.tsx</code></td><td>Search for <code>heroSlides</code></td></tr>
+    <tr><td>Guest reviews</td><td><code>src/components/ReviewCarousel.tsx</code></td><td>Search for <code>const reviews</code></td></tr>
+    <tr><td>Blog posts</td><td><code>src/components/Blog.tsx</code></td><td>Search for <code>const posts</code></td></tr>
+    <tr><td>Quiz game questions</td><td><code>src/components/Game.tsx</code></td><td>Search for <code>const questions</code></td></tr>
+    <tr><td>Map pin location</td><td><code>src/components/Map.tsx</code></td><td>Search for <code>HOTEL_LAT</code></td></tr>
+    <tr><td>Map POI markers</td><td><code>src/components/Map.tsx</code></td><td>Search for <code>const markers</code></td></tr>
+    <tr><td>Phone / WhatsApp number</td><td><code>Home.tsx</code> + <code>Navbar.tsx</code></td><td>Search for <code>wa.me</code></td></tr>
+    <tr><td>Instagram / social links</td><td><code>src/pages/Home.tsx</code></td><td>Footer section</td></tr>
+    <tr><td>Amenities list</td><td><code>src/pages/Home.tsx</code></td><td>Search for <code>"Thoughtful Touches"</code></td></tr>
+    <tr><td>About section text</td><td><code>src/pages/Home.tsx</code></td><td>Search for <code>"Welcome to M2"</code></td></tr>
+    <tr><td>FAQ answers</td><td><code>src/pages/Home.tsx</code></td><td>Search for <code>"Check-in"</code></td></tr>
+    <tr><td>SEO title / meta tags</td><td><code>index.html</code></td><td><code>&lt;head&gt;</code> section</td></tr>
+    <tr><td>Colour theme</td><td><code>src/index.css</code></td><td>CSS variables at top</td></tr>
+    <tr><td>Hotel photos (add new)</td><td><code>src/assets/</code></td><td>Copy file here first</td></tr>
+  </table>
+
+  <!-- 4 -->
+  <h2 id="s4">4. Daily Tasks</h2>
+  <p><strong>Frequency:</strong> Every business day &nbsp;|&nbsp; <strong>Time required:</strong> 5–10 minutes &nbsp;|&nbsp; <strong>Responsibility:</strong> Manager or front desk staff</p>
+  <h3>Task D-01: Verify Site is Online</h3>
+  <ul>
+    <li>Open the live website URL in a browser</li>
+    <li>Confirm the homepage loads with photos and no error messages</li>
+    <li>Check the contact section — tap the WhatsApp link and confirm it opens correctly</li>
+    <li><strong>If site is down:</strong> Contact the AI agent immediately (see Section 20)</li>
+  </ul>
+  <h3>Task D-02: Check Booking Enquiry Form</h3>
+  <ul>
+    <li>Look for any form submissions that may have come in via the site</li>
+    <li>Respond to all enquiries within 4 hours during business hours</li>
+  </ul>
+  <h3>Task D-03: Monitor OTA Listings Alignment</h3>
+  <ul>
+    <li>Briefly compare the prices shown on the website against what is live on Booking.com</li>
+    <li>If they differ, flag for weekly price reconciliation (see Task W-01)</li>
+  </ul>
+
+  <!-- 5 -->
+  <h2 id="s5">5. Weekly Tasks</h2>
+  <p><strong>Frequency:</strong> Every Monday morning &nbsp;|&nbsp; <strong>Time required:</strong> 20–30 minutes &nbsp;|&nbsp; <strong>Responsibility:</strong> Manager</p>
+  <h3>Task W-01: Price Accuracy Check</h3>
+  <ul>
+    <li>Compare current website room prices against current Booking.com and Agoda rates</li>
+    <li>If season has changed or rates have been adjusted on OTAs, update the website prices</li>
+    <li>Open <code>Home.tsx</code>, find the rooms section, update <code>price: "฿X,XXX"</code> values</li>
+    <li><strong>Best practice:</strong> Website direct price should always be equal to or lower than OTA price</li>
+  </ul>
+  <h3>Task W-02: Review New Guest Feedback</h3>
+  <ul>
+    <li>Scan recent Booking.com and Google reviews for the week</li>
+    <li>Identify any recurring positive comments — candidates for the testimonials carousel</li>
+    <li>Identify any recurring complaints — flag for management action</li>
+    <li>If 2+ new strong reviews collected, queue for next monthly review rotation (Task M-02)</li>
+  </ul>
+  <h3>Task W-03: WhatsApp &amp; Contact Link Test</h3>
+  <ul>
+    <li>On a mobile phone, open the website and tap the WhatsApp chat button</li>
+    <li>Confirm it opens WhatsApp and routes to the correct number (+66 098 222 1682)</li>
+    <li>Tap the phone number in the navbar — confirm it dials</li>
+    <li>If broken: contact AI agent immediately</li>
+  </ul>
+  <h3>Task W-04: Photo Quality Spot Check</h3>
+  <ul>
+    <li>Open the Rooms section on both mobile and desktop</li>
+    <li>Confirm all 3 room cards are showing the correct photos and loading quickly</li>
+    <li>Check the hero slideshow is cycling through all 4 slides</li>
+  </ul>
+  <h3>Task W-05: Analytics Review (once set up)</h3>
+  <ul>
+    <li>Review traffic sources: where are visitors coming from?</li>
+    <li>Note the most-viewed pages and most-clicked buttons</li>
+    <li>Check bounce rate — if above 70%, note for monthly review</li>
+  </ul>
+
+  <!-- 6 -->
+  <h2 id="s6">6. Monthly Tasks</h2>
+  <p><strong>Frequency:</strong> First week of each month &nbsp;|&nbsp; <strong>Time required:</strong> 45–90 minutes &nbsp;|&nbsp; <strong>Responsibility:</strong> Manager (AI agent for technical changes)</p>
+  <h3>Task M-01: Price Review &amp; Seasonal Update</h3>
+  <ul>
+    <li>Review upcoming season: are you entering High Season (Nov–Apr) or Low Season (May–Oct)?</li>
+    <li>Update all room prices accordingly</li>
+    <li>Consider adding a promotional banner during low season (ask AI agent)</li>
+  </ul>
+  <table>
+    <tr><th>Season</th><th>Typical Pricing Guidance</th></tr>
+    <tr><td>High Season (Nov–Apr)</td><td>Full rate; prices can be +20% Dec–Jan peak</td></tr>
+    <tr><td>Shoulder (May, Oct)</td><td>Standard rate; consider minor promotions</td></tr>
+    <tr><td>Low Season (Jun–Sep)</td><td>Reduce 10–25%; consider stay-longer deals</td></tr>
+  </table>
+  <h3>Task M-02: Guest Review Rotation</h3>
+  <ul>
+    <li>Collect 1–3 new authentic reviews from Booking.com, Google, or Agoda</li>
+    <li>Copy the exact guest text, their first name, country, and month/year</li>
+    <li>Send to AI agent: "Please replace review [number] in ReviewCarousel.tsx with this new review"</li>
+    <li>Aim to keep all reviews dated within the last 12 months</li>
+  </ul>
+  <h3>Task M-03: Blog Post Review</h3>
+  <ul>
+    <li>Check the blog section — are posts still seasonally relevant?</li>
+    <li>If a major new attraction, restaurant, or event has opened nearby: plan a new blog post</li>
+    <li>Send new post content to AI agent (see Section 11 for format)</li>
+  </ul>
+  <h3>Task M-04: Map &amp; Attractions Update</h3>
+  <ul>
+    <li>Walk around the local area — have any new restaurants, bars, or attractions opened?</li>
+    <li>Note the name and walking distance from M2</li>
+    <li>Ask AI agent to add a new map marker if relevant</li>
+  </ul>
+  <h3>Task M-05: Photo Refresh Assessment</h3>
+  <ul>
+    <li>Review the current hero photos and room cards — are photos more than 6 months old?</li>
+    <li>If yes, take new photos (see Section 8 for guidelines) and submit to AI agent</li>
+  </ul>
+  <h3>Task M-06: Contact Information Verification</h3>
+  <ul>
+    <li>Call each number listed on the website to confirm it is active</li>
+    <li>Send a test WhatsApp to both numbers (+66 098 222 1682 and +66 063 268 6289)</li>
+    <li>Send a test email to hello@m2rooms.com and confirm receipt</li>
+  </ul>
+  <h3>Task M-07: Mobile Responsiveness Check</h3>
+  <ul>
+    <li>Open the full website on a smartphone (not just desktop)</li>
+    <li>Scroll through every section on mobile — check text readability and button sizes</li>
+    <li>If any layout issues found: screenshot and send to AI agent</li>
+  </ul>
+
+  <!-- 7 -->
+  <h2 id="s7">7. Annual Tasks</h2>
+  <p><strong>Frequency:</strong> Every November (before High Season begins) &nbsp;|&nbsp; <strong>Time required:</strong> Half day &nbsp;|&nbsp; <strong>Responsibility:</strong> Owner + Manager</p>
+  <h3>Task A-01: Full Site Content Audit</h3>
+  <ul><li>Read every word on the website — About, FAQ, Amenities, Rooms</li><li>Update any information that has changed over the year</li><li>Verify all prices, policies (check-in/out times, cancellation), and contact info</li></ul>
+  <h3>Task A-02: Photography Overhaul</h3>
+  <ul><li>Commission a professional photographer for new room and property photos</li><li>Minimum deliverables: 3 hero photos, 2 photos per room type, 1 lobby, 1 exterior</li><li>Submit all new photos to AI agent for enhancement and integration</li></ul>
+  <h3>Task A-03: Brand Review</h3>
+  <ul><li>Does the website still represent the property correctly?</li><li>Any new amenities added (e.g., new TVs, new outdoor seating)?</li><li>Any room type changes or reconfigurations? Update all relevant sections</li></ul>
+  <h3>Task A-04: SEO Keyword Review</h3>
+  <ul><li>Review which Google searches are driving traffic</li><li>Update About text and blog posts with refreshed keywords</li><li>Consider commissioning 3–4 new blog posts targeting seasonal search terms</li></ul>
+  <h3>Task A-05: Competitor Analysis</h3>
+  <ul><li>Visit 3–5 competitor guesthouse websites in Patong</li><li>Note anything they do that you don't (photo quality, features, booking tools)</li><li>Bring findings to AI agent as improvement ideas</li></ul>
+  <h3>Task A-06: Technology Review</h3>
+  <ul><li>Ask AI agent if any major updates or improvements are available for the site</li><li>Review whether any new features would benefit guests (e.g., live chat, online booking widget)</li></ul>
+
+  <!-- 8 -->
+  <h2 id="s8">8. How to Update: Photos</h2>
+  <h3>8.1 Photo Specifications</h3>
+  <table>
+    <tr><th>Specification</th><th>Requirement</th></tr>
+    <tr><td>Minimum resolution</td><td>1500px on the long edge</td></tr>
+    <tr><td>Format</td><td>JPG or PNG</td></tr>
+    <tr><td>Lighting</td><td>Natural daylight; no harsh flash</td></tr>
+    <tr><td>Time of day</td><td>Morning light (7–10am) preferred</td></tr>
+    <tr><td>Composition</td><td>Wide-angle; show full room; remove all personal items</td></tr>
+    <tr><td>Cleanliness</td><td>Fresh linen, cushions straight, no wires visible</td></tr>
+  </table>
+  <h3>8.2 Procedure for Updating a Room Photo</h3>
+  <ol><li>Take the photo on a smartphone (minimum iPhone 11 or equivalent)</li><li>Save the photo to a folder named <code>New Photos YYYY-MM</code></li><li>Share the folder with the AI agent (upload directly in the chat)</li><li>Specify exactly which card or section the photo is for (e.g., "Deluxe Room balcony card")</li><li>AI agent will enhance, resize, and integrate the photo automatically</li></ol>
+  <h3>8.3 Procedure for Updating Hero Slideshow Photos</h3>
+  <ul><li>The hero shows 4 rotating photos</li><li>Ideal hero photos: wide, well-lit, landscape orientation preferred</li><li>Submit up to 4 photos to AI agent with the message: "Please replace the hero slideshow with these photos"</li></ul>
+  <h3>8.4 Photo Naming Convention</h3>
+  <ul><li><code>hero_1_room_balcony.jpg</code></li><li><code>room_deluxe_standard_01.jpg</code></li><li><code>lobby_reception_day.jpg</code></li></ul>
+
+  <!-- 9 -->
+  <h2 id="s9">9. How to Update: Prices</h2>
+  <h3>9.1 Via AI Agent (Recommended)</h3>
+  <p>Simply write: <em>"Please update the Deluxe Room price to ฿1,400 and the Superior Room price to ฿1,800."</em></p>
+  <h3>9.2 Direct Edit (Self-Service)</h3>
+  <p>File: <code>artifacts/m2-hotel/src/pages/Home.tsx</code></p>
+  <ol><li>Open the file</li><li>Use Find (Ctrl+F or Cmd+F) and search for <code>฿1,100</code> or <code>"Deluxe Room"</code></li><li>Locate the <code>price:</code> field for each room type</li><li>Change the number inside the quotes, e.g.: <code>price: "฿1,400"</code></li><li>Save the file — the site updates automatically</li></ol>
+  <h3>9.3 Pricing Policy</h3>
+  <ul><li>Website price should always equal or beat the OTA price (Best Rate Guarantee)</li><li>Display starting prices (from ฿X,XXX) — accommodates weekday/weekend variation</li><li>During high season, consider displaying both low and high season rates</li></ul>
+
+  <!-- 10 -->
+  <h2 id="s10">10. How to Update: Reviews</h2>
+  <h3>10.1 Collecting Real Reviews</h3>
+  <p>Use the guest's first name and country only — never full name or room number. Booking.com/Google reviews are already public.</p>
+  <h3>10.2 Review Format</h3>
+  <pre>text:   "The full review text goes here"
+name:   "Guest first name + surname initial"
+loc:    "Country"
+date:   "Month Year"
+stars:  5</pre>
+  <h3>10.3 Via AI Agent</h3>
+  <p>Send: <em>"Please add this new review to the carousel and remove the oldest one:"</em> — then paste the review text, name, country, and date.</p>
+  <h3>10.4 Review Quality Standards</h3>
+  <ul><li>Minimum length: 2 sentences</li><li>Must be authentic (from Booking.com, Google, or TripAdvisor)</li><li>No reviews mentioning amenities you no longer offer (e.g., breakfast, pool)</li><li>Aim for geographic diversity: Australia, Europe, Asia, North America</li></ul>
+  <h3>10.5 Rotation Schedule</h3>
+  <ul><li>Replace 2 reviews per month</li><li>Maintain 6 total reviews in the carousel</li><li>Keep no review older than 18 months</li></ul>
+
+  <!-- 11 -->
+  <h2 id="s11">11. How to Update: Blog Posts</h2>
+  <h3>11.1 Blog Strategy</h3>
+  <p>The blog serves two purposes: <strong>guest value</strong> (useful local information) and <strong>SEO</strong> (fresh content for Google). Post 1–2 articles per month during high season; minimum 1 per month.</p>
+  <h3>11.2 Blog Post Template — Send to AI Agent</h3>
+  <pre>BLOG POST REQUEST
+
+Tag: (Travel Guide / Food &amp; Drink / Travel Tips / Events / Local Life)
+Title: [Your title here]
+Excerpt: [One or two sentences shown on the blog card]
+Date: [Publication date]
+Read Time: [e.g., 5 min read]
+
+Content:
+[Write your full blog post here. Use **bold text** for sub-headings.
+Separate paragraphs with a blank line.]</pre>
+  <h3>11.3 High-Performing Blog Topic Ideas</h3>
+  <p><strong>Evergreen (relevant all year):</strong></p>
+  <ul><li>Best beaches near Patong for snorkelling</li><li>Getting from Phuket Airport to Patong — all options compared</li><li>Best authentic Thai restaurants in Patong</li><li>Phuket day trip guide: the 5 best day trips from Patong</li><li>What to pack for a Phuket trip</li></ul>
+  <p><strong>Seasonal:</strong></p>
+  <ul><li>What's on in Phuket in [Month]</li><li>Songkran Water Festival in Patong — what to expect</li><li>High Season Patong: how to beat the crowds</li></ul>
+
+  <!-- 12 -->
+  <h2 id="s12">12. How to Update: Amenities</h2>
+  <h3>12.1 Current Amenities List</h3>
+  <ol><li>Free High-Speed WiFi</li><li>Air Conditioning</li><li>Flat-screen TV</li><li>Refrigerator</li><li>Hot Water Shower</li><li>On-Call Reception</li><li>Airport Transfer (fee)</li><li>Secure Key-Card Entry</li></ol>
+  <h3>12.2 Adding / Removing an Amenity</h3>
+  <p>Send the AI agent: <em>"Please add [Amenity Name] to the Amenities section"</em> or <em>"Please remove [Amenity Name] from the Amenities section."</em></p>
+  <h3>12.3 Rules</h3>
+  <ul><li>Only list amenities available to <strong>all</strong> guests</li><li>Airport transfer must always be marked "(fee)"</li></ul>
+
+  <!-- 13 -->
+  <h2 id="s13">13. How to Update: the Quiz Game</h2>
+  <h3>13.1 About the Game</h3>
+  <p>The quiz has 6 questions, each with 4 options (A–D), a correct answer index, and a fun fact shown after answering.</p>
+  <h3>13.2 Changing a Question — Via AI Agent</h3>
+  <pre>Question: [Your question text]
+Options: [A] [B] [C] [D]
+Correct answer: [letter]
+Fun fact: [Interesting fact shown after the answer]</pre>
+  <h3>13.3 Changing the Entire Game Type</h3>
+  <p>If you want a completely different game (memory card match, spin-to-win, bingo card), simply describe it to the AI agent and request a rebuild.</p>
+  <h3>13.4 Game Strategy</h3>
+  <p>The quiz keeps guests on your site longer and ends with a direct call to "Book Your Stay". Keep questions fun and learnable — they should make guests excited about visiting Patong.</p>
+
+  <!-- 14 -->
+  <h2 id="s14">14. How to Update: Map Location &amp; Pins</h2>
+  <h3>14.1 Correcting the Hotel Pin</h3>
+  <div class="callout danger"><strong>Critical:</strong> The hotel pin must show your exact building location.</div>
+  <ol>
+    <li>Open <strong>Google Maps</strong> on your phone or computer</li>
+    <li>Search for "M2 Room For Rent Patong" — find your property</li>
+    <li>Long-press (mobile) or right-click (desktop) the exact building</li>
+    <li>Select "What's here?" — two numbers will appear (e.g., <code>7.8981, 98.2960</code>)</li>
+    <li>Send to AI agent: <em>"Please update the hotel map pin coordinates to 7.XXXX, 98.XXXX"</em></li>
+  </ol>
+  <h3>14.2 Adding a New Point of Interest</h3>
+  <p>Find its coordinates via Google Maps, then tell the AI agent: <em>"Please add [Name] at coordinates [lat, lng] to the map — [short description]"</em></p>
+  <h3>14.3 Map Pin Colours</h3>
+  <table>
+    <tr><th>Colour</th><th>Used for</th></tr>
+    <tr><td>Red</td><td>M2 hotel (do not change)</td></tr>
+    <tr><td>Blue</td><td>Beach / water</td></tr>
+    <tr><td>Violet</td><td>Nightlife / entertainment</td></tr>
+    <tr><td>Green</td><td>Shopping / malls</td></tr>
+    <tr><td>Grey</td><td>Medical / practical</td></tr>
+    <tr><td>Orange</td><td>Sports / activities</td></tr>
+    <tr><td>Yellow</td><td>Attractions / sightseeing</td></tr>
+  </table>
+
+  <!-- 15 -->
+  <h2 id="s15">15. How to Update: Contact Information</h2>
+  <h3>15.1 Current Contact Details</h3>
+  <table>
+    <tr><th>Field</th><th>Current Value</th></tr>
+    <tr><td>Main WhatsApp/Phone</td><td>+66 098 222 1682</td></tr>
+    <tr><td>Manager Phone</td><td>+66 063 268 6289</td></tr>
+    <tr><td>Email</td><td>hello@m2rooms.com</td></tr>
+    <tr><td>Instagram</td><td>instagram.com/m2rooms/</td></tr>
+    <tr><td>Booking.com</td><td>booking.com/hotel/th/m2-room-for-rent</td></tr>
+  </table>
+  <h3>15.2 Changing a Phone Number</h3>
+  <p>If a number changes, it must be updated in <strong>three places</strong>: the Navbar, the Contact section, and the Footer. Always use international format: <code>https://wa.me/66982221682</code> (no leading zero, no spaces).</p>
+
+  <!-- 16 -->
+  <h2 id="s16">16. Hosting on GitHub Pages (Free)</h2>
+  <h3>16.1 What Is GitHub Pages?</h3>
+  <p>GitHub Pages is a free hosting service. Your site files are stored in a GitHub repository (a cloud folder) and automatically served as a live website — e.g., <code>yourusername.github.io/m2-hotel</code> or a custom domain like <code>www.m2roomspatong.com</code>.</p>
+  <p><strong>Cost:</strong> Free for public repositories. Custom domain requires purchasing a domain name (~$12–20/year).</p>
+  <h3>16.2 One-Time Setup — Send This to the AI Agent</h3>
+  <blockquote>"Please prepare the M2 hotel website for deployment to GitHub Pages. I want to host it at [your desired URL]. My GitHub username is [your username]."</blockquote>
+  <h3>16.3 Updating the GitHub-Hosted Site</h3>
+  <ol><li>Come to this Replit workspace and ask the AI agent to make your changes</li><li>Agent makes the changes and confirms they look correct</li><li>Run: <code>pnpm --filter @workspace/m2-hotel run build</code></li><li>Push built files to GitHub via <code>git push</code></li><li>GitHub Pages automatically publishes within ~2 minutes</li></ol>
+  <h3>16.4 Custom Domain Setup</h3>
+  <ol><li>Purchase a domain from Namecheap or Google Domains (~$12/year)</li><li>Tell the AI agent your domain name — agent adds the correct files</li><li>Update two DNS records with your domain registrar (agent provides exact values)</li><li>Wait 24–48 hours for worldwide propagation</li></ol>
+
+  <!-- 17 -->
+  <h2 id="s17">17. Working with the AI Agent</h2>
+  <h3>17.1 What the AI Agent Can Do</h3>
+  <ul><li>Update text, prices, photos, reviews, blog posts</li><li>Add entirely new sections or features</li><li>Redesign parts of the site</li><li>Fix bugs or broken elements</li><li>Add SEO tags, analytics, new pages</li></ul>
+  <h3>17.2 How to Request an Update</h3>
+  <table>
+    <tr><th>Good Request</th><th>Why It Works</th></tr>
+    <tr><td>"Update the Deluxe Room price to ฿1,300 and add 'Free beach towels' to its features"</td><td>Specific, clear, actionable</td></tr>
+    <tr><td>"Replace review 2 with this new review from [name], Singapore, March 2025: [text]"</td><td>Provides all required fields</td></tr>
+    <tr><td>"Add a new blog post about Songkran Festival. Here is the content: [paste text]"</td><td>Includes the content to use</td></tr>
+    <tr><td>"The WhatsApp button isn't opening the correct number — please check and fix it"</td><td>Describes the problem clearly</td></tr>
+  </table>
+  <table>
+    <tr><th>Poor Request</th><th>Why It Fails</th></tr>
+    <tr><td>"Make it better"</td><td>Too vague</td></tr>
+    <tr><td>"Fix the photos"</td><td>Which photos? Fix how?</td></tr>
+    <tr><td>"Update the prices"</td><td>To what?</td></tr>
+  </table>
+  <h3>17.3 The Update Cycle</h3>
+  <pre>You describe the change
+       ↓
+AI agent makes the change in the code
+       ↓
+AI agent takes a screenshot to verify it looks correct
+       ↓
+You confirm it looks right in the preview
+       ↓
+Change is saved (checkpoint created automatically)</pre>
+  <h3>17.4 If the Site Breaks</h3>
+  <p>Tell the agent: <em>"Something broke — please check the error logs"</em>. If unresolvable: <em>"Please roll back to the last checkpoint."</em> No work is ever permanently lost.</p>
+
+  <!-- 18 -->
+  <h2 id="s18">18. SEO — Ongoing Optimisation</h2>
+  <h3>18.1 Technical SEO (One-Time — Ask AI Agent)</h3>
+  <ul>
+    <li>&#9745; Title tag — done</li>
+    <li>&#9745; Meta description — done</li>
+    <li>&#9745; Open Graph tags — done</li>
+    <li>&#9745; Structured data / JSON-LD — done</li>
+    <li>&#9745; Geo tags — done</li>
+    <li>&#9744; Google Analytics — ask AI agent to add</li>
+    <li>&#9744; Sitemap.xml — ask AI agent to generate</li>
+  </ul>
+  <h3>18.2 Content SEO (Ongoing)</h3>
+  <table>
+    <tr><th>Action</th><th>Frequency</th><th>Impact</th></tr>
+    <tr><td>Publish a new blog post (min. 400 words)</td><td>Monthly</td><td>High</td></tr>
+    <tr><td>Update existing blog posts</td><td>Quarterly</td><td>Medium</td></tr>
+    <tr><td>Add new guest reviews with location keywords</td><td>Monthly</td><td>Medium</td></tr>
+    <tr><td>Get other websites to link to yours</td><td>Ongoing</td><td>High</td></tr>
+    <tr><td>Register on Google Business Profile</td><td>Once</td><td>Very High</td></tr>
+  </table>
+  <h3>18.3 Google Business Profile</h3>
+  <div class="callout info"><strong>Do this first.</strong> Go to <strong>google.com/business</strong>, search for "M2 Room For Rent Patong", and claim your listing. Complete 100% of the profile. This puts you on Google Maps searches.</div>
+  <h3>18.4 Target Keywords</h3>
+  <p><strong>Primary:</strong> Patong Beach guesthouse · Boutique hotel Patong Phuket · Rooms near Patong Beach</p>
+  <p><strong>Secondary:</strong> Phuket budget accommodation · Patong accommodation Thailand</p>
+  <p><strong>Long-tail (for blog posts):</strong> "Where to stay near Patong Beach" · "Best guesthouses in Patong 2025"</p>
+
+  <!-- 19 -->
+  <h2 id="s19">19. Continuous Improvement Framework</h2>
+  <h3>19.1 Monthly Metrics to Monitor</h3>
+  <table>
+    <tr><th>Metric</th><th>Where to Find</th><th>Action if Declining</th></tr>
+    <tr><td>Website visitors</td><td>Google Analytics</td><td>Publish new blog post; check SEO</td></tr>
+    <tr><td>Direct enquiries via contact form</td><td>Email inbox</td><td>Improve CTA visibility; add WhatsApp button</td></tr>
+    <tr><td>WhatsApp conversations from website</td><td>WhatsApp</td><td>Ensure button is visible on mobile</td></tr>
+    <tr><td>Booking.com review score</td><td>Booking.com extranet</td><td>Check for recurring complaints; update FAQ</td></tr>
+  </table>
+  <h3>19.2 Quarterly Improvement Questions</h3>
+  <ol>
+    <li>What are guests most complimenting? → Highlight it more on the website</li>
+    <li>What are guests complaining about? → Fix the issue, or manage expectations in the FAQ</li>
+    <li>What questions do guests ask most at check-in? → Add it to the FAQ section</li>
+    <li>Are there new attractions or restaurants nearby? → Update the map and blog</li>
+    <li>What are competitor guesthouses doing that we're not? → Consider adopting</li>
+    <li>Has any room been refurbished or improved? → Update photos</li>
+  </ol>
+  <h3>19.3 Future Feature Ideas</h3>
+  <table>
+    <tr><th>Feature</th><th>Value</th><th>Complexity</th></tr>
+    <tr><td>Floating WhatsApp chat bubble</td><td>High — instant guest contact</td><td>Done ✓</td></tr>
+    <tr><td>Online availability calendar</td><td>High — reduces email back-and-forth</td><td>Medium</td></tr>
+    <tr><td>Multilingual toggle (Thai / Chinese / Korean)</td><td>High for Asian markets</td><td>Medium</td></tr>
+    <tr><td>Special offers banner (dismissible)</td><td>Medium — drives direct bookings</td><td>Low</td></tr>
+    <tr><td>Google Analytics dashboard</td><td>High — see exactly who visits</td><td>Low</td></tr>
+    <tr><td>QR code linking to website</td><td>Medium — offline to online bridge</td><td>Low</td></tr>
+  </table>
+
+  <!-- 20 -->
+  <h2 id="s20">20. Emergency Procedures</h2>
+  <h3>20.1 Site Is Down / Not Loading</h3>
+  <ol><li>Hard-refresh the browser (Ctrl+Shift+R)</li><li>Try a different browser and device</li><li>If still down: open Replit workspace and check workflow status</li><li>Contact AI agent: "The website is not loading. Please check the workflow logs and fix the issue."</li></ol>
+  <h3>20.2 Wrong Information Is Live</h3>
+  <ol><li>Take a screenshot of the error</li><li>Contact AI agent immediately with the screenshot and what it should say</li><li>Changes deploy within minutes</li></ol>
+  <h3>20.3 Site Content Has Been Corrupted</h3>
+  <p>Tell AI agent: <em>"Something has gone wrong — please roll back to the last working checkpoint."</em> The system saves checkpoints automatically.</p>
+  <h3>20.4 Phone Number Has Changed</h3>
+  <div class="callout danger"><strong>Urgent.</strong> The number appears in the navbar, contact section, footer, and WhatsApp chat button. Contact AI agent immediately: "Our phone number has changed from [old] to [new]. Please update all instances."</div>
+
+  <!-- 21 -->
+  <h2 id="s21">21. Glossary</h2>
+  <table>
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td>AI Agent</td><td>The Replit AI assistant used to make website changes</td></tr>
+    <tr><td>Checkpoint</td><td>An automatic save point of the website — can be rolled back to</td></tr>
+    <tr><td>OTA</td><td>Online Travel Agency — Booking.com, Agoda, Airbnb</td></tr>
+    <tr><td>Organic Search</td><td>Visitors who found you via Google (not paid ads)</td></tr>
+    <tr><td>SEO</td><td>Search Engine Optimisation — making Google rank you higher</td></tr>
+    <tr><td>Meta Description</td><td>The text that appears under your site name in Google results</td></tr>
+    <tr><td>Open Graph</td><td>Tags that control how your website looks when shared on social media</td></tr>
+    <tr><td>Structured Data</td><td>Code that helps Google understand your property type, rating, and location</td></tr>
+    <tr><td>GitHub Pages</td><td>Free website hosting service by GitHub</td></tr>
+    <tr><td>Bounce Rate</td><td>Percentage of visitors who leave without clicking anything — lower is better</td></tr>
+    <tr><td>Conversion</td><td>When a visitor takes a desired action (calls, WhatsApps, submits form)</td></tr>
+    <tr><td>Vite</td><td>The build tool that converts the code into a working website</td></tr>
+  </table>
+
+  <!-- Footer -->
+  <div class="doc-footer">
+    <p>M2 Rooms &amp; Stays &mdash; M2 Room For Rent &nbsp;&middot;&nbsp; Patong, Phuket 83150, Thailand</p>
+    <p style="margin-top:6px;">Document ID: M2-WEB-SOP-001 &nbsp;&middot;&nbsp; Version 1.0 &nbsp;&middot;&nbsp; May 2025 &nbsp;&middot;&nbsp; Review: November 2025</p>
+  </div>
+
+</div>
+</body>
+</html>

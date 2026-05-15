@@ -53,3 +53,9 @@ id = "g9_CB9V3W84OJQ3i3eN-v"
 uri = "file://M2_WEBSITE_SOP.md"
 type = "text"
 title = "M2 Rooms & Stays — Website Operations Manual (SOP)"
+
+[[outputs]]
+id = "5YtQrY9xgry_1-PT3Jl7-"
+uri = "file://M2_WEBSITE_SOP.zip"
+type = "unspecified"
+title = "M2 Rooms & Stays — Website Operations Manual"
