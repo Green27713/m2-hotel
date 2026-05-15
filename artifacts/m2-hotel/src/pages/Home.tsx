@@ -18,15 +18,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 // Real hotel photos (enhanced)
-import heroSlide1 from "@/assets/M2_room_small_enhanced.jpg";
-import heroSlide2 from "@/assets/M2_room_deluxe_enhanced.jpg";
+import heroSlide1 from "@/assets/M2_deluxe_balcony_enhanced.jpg";
+import heroSlide2 from "@/assets/M2_superior_enhanced.jpg";
 import heroSlide3 from "@/assets/M2_lobby_enhanced.jpg";
 import exteriorImg from "@/assets/M2_exterior_enhanced.jpg";
 import lobbyImg from "@/assets/M2_lobby_enhanced.jpg";
-import deluxeImg from "@/assets/M2_room_deluxe_enhanced.jpg";
+import deluxeBalconyImg from "@/assets/M2_deluxe_balcony_enhanced.jpg";
+import deluxeStandardImg from "@/assets/M2_deluxe_standard_enhanced.jpg";
 import superiorImg from "@/assets/M2_superior_enhanced.jpg";
 import superiorLampImg from "@/assets/M2_superior_lamp_enhanced.jpg";
-import deluxe2Img from "@/assets/M2_deluxe2_enhanced.jpg";
 import areaImg from "@/assets/M2_area_enhanced.jpg";
 import moodImg from "@/assets/M2_room_mood_enhanced.jpg";
 
@@ -240,21 +240,27 @@ export function Home() {
             {[
               {
                 name: "Deluxe Room",
-                img: deluxeImg,
-                features: ["King Bed", "En-suite Bathroom", "Air Conditioning", "Flat-screen TV", "Refrigerator", "City View"],
-                price: "฿1,200",
+                img: deluxeBalconyImg,
+                badge: "With Balcony",
+                features: ["Double Bed", "Private Balcony", "Air Conditioning", "Flat-screen TV", "Refrigerator", "Hot Water"],
+                price: "฿1,100",
+                note: "Smaller, cosy room — perfect for couples or solo travellers",
+              },
+              {
+                name: "Deluxe Room",
+                img: deluxeStandardImg,
+                badge: "Standard",
+                features: ["Double Bed", "En-suite Bathroom", "Air Conditioning", "Flat-screen TV", "Refrigerator", "Hot Water"],
+                price: "฿1,100",
+                note: "Clean, modern room with everything you need for a great stay",
               },
               {
                 name: "Superior Room",
                 img: superiorImg,
-                features: ["Queen Bed", "Private Balcony", "Air Conditioning", "Flat-screen TV", "Wardrobe", "Kettle"],
+                badge: "Larger Room",
+                features: ["King Bed", "Spacious Layout", "Air Conditioning", "Flat-screen TV", "Refrigerator", "Work Desk"],
                 price: "฿1,500",
-              },
-              {
-                name: "Superior Room (King)",
-                img: superiorLampImg,
-                features: ["King Bed", "Reading Nook", "Air Conditioning", "Flat-screen TV", "Refrigerator", "Work Desk"],
-                price: "฿1,800",
+                note: "Our largest rooms — more space to relax and spread out",
               },
             ].map((room, i) => (
               <motion.div
@@ -263,21 +269,25 @@ export function Home() {
                 data-testid={`card-room-${i}`}
                 className="group relative bg-card border border-border/50 overflow-hidden"
               >
-                <div className="relative h-64 md:h-80 overflow-hidden">
+                <div className="relative h-64 md:h-72 overflow-hidden">
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10" />
                   <img
                     src={room.img}
                     alt={room.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
+                  <div className="absolute top-4 left-4 z-20 bg-primary text-primary-foreground px-3 py-1 text-xs font-bold tracking-[0.15em] uppercase">
+                    {room.badge}
+                  </div>
                   <div className="absolute top-4 right-4 z-20 bg-background/90 backdrop-blur px-3 py-1 text-sm font-medium tracking-wide">
                     From {room.price}
                   </div>
                 </div>
                 <div className="p-6 md:p-8">
-                  <h4 className="font-serif text-2xl font-medium mb-3 group-hover:text-primary transition-colors">
+                  <h4 className="font-serif text-2xl font-medium mb-1 group-hover:text-primary transition-colors">
                     {room.name}
                   </h4>
+                  <p className="text-xs text-muted-foreground font-light mb-4 italic">{room.note}</p>
                   <ul className="flex flex-wrap gap-x-4 gap-y-2 mb-8 text-sm text-muted-foreground font-light">
                     {room.features.map((f) => (
                       <li key={f} className="flex items-center gap-1.5">
@@ -298,7 +308,7 @@ export function Home() {
 
           {/* Room gallery strip */}
           <div className="mt-12 grid grid-cols-3 gap-3">
-            {[deluxe2Img, moodImg, lobbyImg].map((img, i) => (
+            {[superiorLampImg, moodImg, lobbyImg].map((img, i) => (
               <div key={i} className="aspect-video overflow-hidden">
                 <img src={img} alt="M2 room detail" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
