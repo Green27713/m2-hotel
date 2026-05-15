@@ -10,27 +10,27 @@
 
 ## TABLE OF CONTENTS
 
-1. Purpose & Scope
-2. Roles & Responsibilities
-3. Key File Reference Guide
-4. Daily Tasks
-5. Weekly Tasks
-6. Monthly Tasks
-7. Annual Tasks
-8. How to Update: Photos
-9. How to Update: Prices
-10. How to Update: Reviews
-11. How to Update: Blog Posts
-12. How to Update: Amenities
-13. How to Update: the Quiz Game
-14. How to Update: Map Location & Pins
-15. How to Update: Contact Information
-16. Hosting on GitHub Pages (Free)
-17. How to Work with the AI Agent to Update the Site
-18. SEO — Ongoing Optimisation
-19. Continuous Improvement Framework
-20. Emergency Procedures
-21. Glossary
+1. [Purpose & Scope](#1-purpose--scope)
+2. [Roles & Responsibilities](#2-roles--responsibilities)
+3. [Key File Reference Guide](#3-key-file-reference-guide)
+4. [Daily Tasks](#4-daily-tasks)
+5. [Weekly Tasks](#5-weekly-tasks)
+6. [Monthly Tasks](#6-monthly-tasks)
+7. [Annual Tasks](#7-annual-tasks)
+8. [How to Update: Photos](#8-how-to-update-photos)
+9. [How to Update: Prices](#9-how-to-update-prices)
+10. [How to Update: Reviews](#10-how-to-update-reviews)
+11. [How to Update: Blog Posts](#11-how-to-update-blog-posts)
+12. [How to Update: Amenities](#12-how-to-update-amenities)
+13. [How to Update: the Quiz Game](#13-how-to-update-the-quiz-game)
+14. [How to Update: Map Location & Pins](#14-how-to-update-map-location--pins)
+15. [How to Update: Contact Information](#15-how-to-update-contact-information)
+16. [Hosting on GitHub Pages (Free)](#16-hosting-on-github-pages-free)
+17. [How to Work with the AI Agent to Update the Site](#17-working-with-the-ai-agent-to-update-the-site)
+18. [SEO — Ongoing Optimisation](#18-seo--ongoing-optimisation)
+19. [Continuous Improvement Framework](#19-continuous-improvement-framework)
+20. [Emergency Procedures](#20-emergency-procedures)
+21. [Glossary](#21-glossary)
 
 ---
 
