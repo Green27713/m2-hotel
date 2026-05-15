@@ -275,7 +275,7 @@ export function Home() {
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10" />
                   <img
                     src={room.img}
-                    alt={room.name}
+                    alt={`${room.name} – ${room.badge} at M2 Rooms & Stays Patong Beach, Phuket`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute top-4 left-4 z-20 bg-primary text-primary-foreground px-3 py-1 text-xs font-bold tracking-[0.15em] uppercase">
@@ -310,9 +310,13 @@ export function Home() {
 
           {/* Room gallery strip */}
           <div className="mt-12 grid grid-cols-3 gap-3">
-            {[superiorLampImg, moodImg, lobbyImg].map((img, i) => (
+            {[
+              { img: superiorLampImg, alt: "Superior room interior lighting and decor, M2 Rooms & Stays Patong" },
+              { img: moodImg,         alt: "Stylish room ambience at M2 Rooms & Stays Patong Beach, Phuket" },
+              { img: lobbyImg,        alt: "M2 Rooms & Stays lobby and reception area, Patong Phuket" },
+            ].map(({ img, alt }, i) => (
               <div key={i} className="aspect-video overflow-hidden">
-                <img src={img} alt="M2 room detail" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                <img src={img} alt={alt} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
             ))}
           </div>
