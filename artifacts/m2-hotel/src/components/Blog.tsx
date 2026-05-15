@@ -71,6 +71,39 @@ The restaurants right on the beach sand charge 3x the price for average food. Wa
 Ask any of our team at reception — we're always happy to share our current favourites and can even help you read the Thai menus!`,
   },
   {
+    id: 4,
+    tag: "Nightlife & Entertainment",
+    title: "Zag Club & Paradise Complex — Patong's World-Famous LGBTQ Entertainment",
+    excerpt:
+      "Visitors fly in from every corner of the globe specifically to experience it. Here's your complete guide to Paradise Complex and the dazzling Zag Club ladyboy cabaret.",
+    date: "16 May 2025",
+    readTime: "5 min read",
+    content: `Few entertainment strips in the world draw as international a crowd as Paradise Complex in Patong Beach. Tucked just off Rat-U-Thit Road, this compact but vibrant district has earned a global reputation as one of Southeast Asia's most welcoming and spectacular LGBTQ nightlife destinations — and the Zag Club sits proudly at its heart.
+
+**What is Paradise Complex?**
+Paradise Complex is Patong's dedicated LGBTQ entertainment zone — a cluster of bars, clubs, karaoke venues, and cabaret shows centred on Soi Crocodile. The atmosphere is inclusive, colourful, and joyful. Everyone is welcome regardless of orientation or background, and the crowd on any given night is a wonderful mix of solo travellers, couples, hen parties, curious first-timers, and regulars who come back year after year. On a busy high-season night you'll hear a dozen different languages within the first five minutes.
+
+**The Zag Club Ladyboy Show**
+The Zag Club is the centrepiece of the complex and one of the most talked-about shows in all of Thailand. The performances feature Thailand's kathoey (ladyboy) performers — extraordinarily talented artists who bring jaw-dropping costumes, precision choreography, lip-sync artistry, and genuine theatrical flair to every show.
+
+Performances typically run several times each evening. Expect elaborate theme segments — Bollywood sequences, pop medleys, classic Thai dance, Broadway-style numbers — all executed with high production values and real charisma. Many performers have been doing this for years and have built genuine fan followings from guests who return season after season.
+
+**Why People Come From Around the World**
+It's not an exaggeration to say that the Zag Club draws an international audience. Guests from Australia, the UK, Germany, the United States, Scandinavia, Japan, and across Asia make it a specific stop on their Phuket itinerary. For many, it's a bucket-list experience — there is simply nothing quite like it back home. The combination of outstanding performance quality, the warmth of the Thai hospitality, and the unique cultural context makes it genuinely unlike any show elsewhere in the world.
+
+Travel bloggers and vloggers regularly name it among the top five things to do in Patong. Group tours from major Phuket resorts include it as a highlight. It sells out on peak nights — if you plan to go during high season, it's worth arriving a little early.
+
+**Practical Tips**
+Tickets are typically available at the door and are very reasonable — usually between ฿200 and ฿400. Drinks are available inside and the venue is fully air-conditioned. Shows last around 60–75 minutes. Photography policies vary — check with staff on the night. The performers are usually available to meet and take photos after the show, which is a big part of the experience for many visitors.
+
+Dress code is relaxed — smart casual is fine. The venue is LGBTQ-friendly by definition but also genuinely welcoming to everyone, and the shows are appropriate for adults of all backgrounds.
+
+**Getting There from M2**
+Paradise Complex is approximately a 15-minute walk from M2 Rooms & Stays, or a very short tuk-tuk ride. Head towards Bangla Road and follow the signs towards Soi Crocodile. Our reception team can give you directions, recommend the best show time for your visit, and even help you book if you'd prefer to secure your seats in advance.
+
+A night at the Zag Club is one of those experiences that stays with you long after you leave Patong — spectacular, joyful, and utterly one of a kind.`,
+  },
+  {
     id: 3,
     tag: "Travel Tips",
     title: "High Season vs Low Season in Phuket — When to Visit",
