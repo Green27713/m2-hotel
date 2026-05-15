@@ -56,20 +56,20 @@ export function Navbar() {
             <img
               src={logoImg}
               alt="M2 Rooms & Stays logo"
-              className="w-14 h-14 object-contain shrink-0 drop-shadow-sm"
+              className="w-10 h-10 md:w-14 md:h-14 object-contain shrink-0 drop-shadow-sm"
             />
 
             {/* Name stack */}
             <div className="flex flex-col leading-tight">
               <span
-                className={`font-serif font-bold text-xl tracking-wide transition-colors ${
+                className={`font-serif font-bold text-base md:text-xl tracking-wide whitespace-nowrap transition-colors ${
                   isScrolled ? "text-foreground" : "text-white"
                 }`}
               >
                 M2 Rooms &amp; Stays
               </span>
               <span
-                className={`font-sans text-xs tracking-[0.18em] uppercase transition-colors ${
+                className={`hidden md:block font-sans text-xs tracking-[0.18em] uppercase transition-colors ${
                   isScrolled ? "text-muted-foreground" : "text-white/70"
                 }`}
               >
