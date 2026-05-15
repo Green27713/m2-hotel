@@ -56,7 +56,7 @@ export function Navbar() {
             <img
               src={logoImg}
               alt="M2 Rooms & Stays logo"
-              className="w-11 h-11 object-contain shrink-0 drop-shadow-sm"
+              className="w-14 h-14 object-contain shrink-0 drop-shadow-sm"
             />
 
             {/* Name stack */}
@@ -66,7 +66,7 @@ export function Navbar() {
                   isScrolled ? "text-foreground" : "text-white"
                 }`}
               >
-                Rooms &amp; Stays
+                M2 Rooms &amp; Stays
               </span>
               <span
                 className={`font-sans text-xs tracking-[0.18em] uppercase transition-colors ${
