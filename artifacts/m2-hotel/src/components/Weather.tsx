@@ -5,15 +5,15 @@ import { Card, CardContent } from "@/components/ui/card";
 interface WeatherData {
   current: {
     temperature_2m: number;
-    weathercode: number;
-    windspeed_10m: number;
+    weather_code: number;
+    wind_speed_10m: number;
     relative_humidity_2m: number;
   };
   daily: {
     time: string[];
     temperature_2m_max: number[];
     temperature_2m_min: number[];
-    weathercode: number[];
+    weather_code: number[];
   };
 }
 
@@ -25,7 +25,7 @@ export function WeatherWidget() {
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          "https://api.open-meteo.com/v1/forecast?latitude=7.8956&longitude=98.2978&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia/Bangkok"
+          "https://api.open-meteo.com/v1/forecast?latitude=7.8956&longitude=98.2978&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Asia/Bangkok"
         );
         const json = await response.json();
         setData(json);
@@ -60,7 +60,7 @@ export function WeatherWidget() {
     );
   }
 
-  const currentInfo = getWeatherInfo(data.current.weathercode);
+  const currentInfo = getWeatherInfo(data.current.weather_code);
   const CurrentIcon = currentInfo.icon;
 
   return (
@@ -80,7 +80,7 @@ export function WeatherWidget() {
         <div className="flex gap-8 text-sm">
           <div className="flex flex-col items-center gap-2">
             <Wind size={20} className="text-muted-foreground" />
-            <span className="font-medium">{Math.round(data.current.windspeed_10m)} km/h</span>
+            <span className="font-medium">{Math.round(data.current.wind_speed_10m)} km/h</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Droplets size={20} className="text-muted-foreground" />
@@ -92,8 +92,8 @@ export function WeatherWidget() {
       <CardContent className="p-0">
         <div className="grid grid-cols-3 divide-x divide-border/50">
           {data.daily.time.slice(1, 4).map((time, idx) => {
-            const index = idx + 1; // +1 to skip today
-            const info = getWeatherInfo(data.daily.weathercode[index]);
+            const index = idx + 1;
+            const info = getWeatherInfo(data.daily.weather_code[index]);
             const Icon = info.icon;
             const date = new Date(time);
             
