@@ -4,46 +4,60 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 const reviews = [
   {
-    text: "A hidden gem in Patong! The staff were incredibly friendly and the room was spotless and beautifully designed. The location is perfect — quiet enough to sleep well but a short walk to everything.",
-    name: "Sarah Jenkins",
-    loc: "Australia",
-    date: "Oct 2024",
+    text: "I had an absolutely amazing stay at M2 Room for Rent. The room was more than beautiful and spotlessly clean — it honestly exceeded my expectations. The owner was incredibly friendly, welcoming, and helpful. I rarely felt as comfortable and well looked after anywhere.",
+    name: "Patrick",
+    loc: "Switzerland",
+    date: "2024",
     stars: 5,
+    source: "Booking.com",
   },
   {
-    text: "Perfect for solo travellers. Super clean, great WiFi for working remotely, and the reception team were so helpful with tips about the area. Felt like a home away from home.",
-    name: "Marco Rossi",
+    text: "We stayed at M2 twice — 4 nights each time. After the first stay, we came back because we loved everything about this place. The rooms were very clean and the manager and his staff were always there to help and support us. Everybody was very warm and welcoming.",
+    name: "Hubert",
+    loc: "Switzerland",
+    date: "2024",
+    stars: 5,
+    source: "Booking.com",
+  },
+  {
+    text: "Very nice hotel — new, very clean. The guy in reception is very friendly and helpful. It's situated on a walking street, so also very quiet. Recommended!",
+    name: "L.",
     loc: "Italy",
-    date: "Jan 2025",
+    date: "2024",
     stars: 5,
+    source: "Booking.com",
   },
   {
-    text: "The best guesthouse experience I've had in Thailand. Felt like a boutique hotel but with the personal warmth you only get from smaller properties. Would stay again in a heartbeat.",
-    name: "Emma Wood",
-    loc: "United Kingdom",
-    date: "Feb 2025",
+    text: "Comfortable bedding, very clean room, very helpful staff. Great location — close to the centre and very quiet. Excellent value for money. Staff were also very helpful arranging an airport transfer.",
+    name: "Arnaud",
+    loc: "France",
+    date: "2025",
     stars: 5,
+    source: "Booking.com",
   },
   {
-    text: "Fantastic value for Patong. The room was large, modern, and had everything we needed — AC, TV, hot water, refrigerator. Five minutes walk to the beach. Could not ask for more.",
-    name: "David Chen",
-    loc: "Singapore",
-    date: "Mar 2025",
+    text: "Excellent welcome from our host. The room is spacious and completely renovated recently. Excellent value for money. Top location — right near Bangla Road.",
+    name: "Florian",
+    loc: "France",
+    date: "2025",
     stars: 5,
+    source: "Booking.com",
   },
   {
-    text: "We stayed for 10 nights and loved every minute. The reception staff went above and beyond helping us arrange scooter rentals and trips. Room was immaculate throughout.",
-    name: "Kirsten Müller",
+    text: "Very clean room, great hosts and a very good location. Quiet at night. Fast WiFi! Everything was perfect.",
+    name: "Philipp",
     loc: "Germany",
-    date: "Apr 2025",
+    date: "2025",
     stars: 5,
+    source: "Booking.com",
   },
   {
-    text: "Excellent location, clean and comfortable rooms, and genuinely warm hospitality. M2 understands what travellers actually need. Already booked again for November!",
-    name: "Jake Thompson",
-    loc: "Canada",
-    date: "May 2025",
+    text: "Everything was genuinely great. The person at reception is a really kind and helpful person.",
+    name: "Gotzon",
+    loc: "Spain",
+    date: "2025",
     stars: 5,
+    source: "Booking.com",
   },
 ];
 
@@ -88,6 +102,9 @@ export function ReviewCarousel() {
             <h3 className="font-serif text-4xl md:text-5xl font-medium text-primary-foreground">
               What Our Guests Say
             </h3>
+            <p className="text-primary-foreground/60 text-sm mt-3">
+              Real reviews from Booking.com &nbsp;·&nbsp; Rated <span className="text-secondary font-semibold">8.7 Excellent</span> &nbsp;·&nbsp; Location <span className="text-secondary font-semibold">9.5 / 10</span>
+            </p>
           </div>
           <div className="flex gap-3">
             <button
@@ -129,10 +146,15 @@ export function ReviewCarousel() {
                     data-testid={`card-review-${idx}`}
                     className="bg-primary-foreground/5 border border-primary-foreground/10 p-8 backdrop-blur-sm flex flex-col"
                   >
-                    <div className="flex gap-1 text-secondary mb-5">
-                      {[...Array(r.stars)].map((_, j) => (
-                        <Star key={j} size={15} fill="currentColor" />
-                      ))}
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex gap-1 text-secondary">
+                        {[...Array(r.stars)].map((_, j) => (
+                          <Star key={j} size={15} fill="currentColor" />
+                        ))}
+                      </div>
+                      <span className="text-xs text-primary-foreground/40 font-medium tracking-wide uppercase">
+                        {r.source}
+                      </span>
                     </div>
                     <p className="font-serif italic text-lg leading-relaxed flex-1 mb-6">
                       &ldquo;{r.text}&rdquo;
