@@ -52,7 +52,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 md:px-8 flex items-center justify-between py-3">
 
           {/* Brand identity */}
-          <Link href="/" className="flex items-center gap-3 group" data-testid="link-home">
+          <Link href="/" className="flex items-center gap-3 group" data-testid="link-home" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <img
               src={logoImg}
               alt="M2 Rooms & Stays logo"

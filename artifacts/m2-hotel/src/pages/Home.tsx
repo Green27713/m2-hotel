@@ -402,12 +402,12 @@ export function Home() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {[
-              { img: attr1Img, name: "Patong Beach", desc: "5 min walk · The main beach strip" },
-              { img: areaImg,  name: "Bangla Road & Town", desc: "10 min walk · Nightlife & street food" },
-              { img: attr3Img, name: "Wat Chalong Temple", desc: "25 min drive · Sacred Buddhist temple" },
-              { img: attr4Img, name: "Big Buddha Phuket", desc: "35 min drive · Stunning island views" },
+              { img: attr1Img, name: "Patong Beach", desc: "5 min walk · The main beach strip", maps: "https://maps.google.com/?q=Patong+Beach+Phuket+Thailand" },
+              { img: areaImg,  name: "Bangla Road & Town", desc: "10 min walk · Nightlife & street food", maps: "https://maps.google.com/?q=Bangla+Road+Patong+Phuket+Thailand" },
+              { img: attr3Img, name: "Wat Chalong Temple", desc: "25 min drive · Sacred Buddhist temple", maps: "https://maps.google.com/?q=Wat+Chalong+Phuket+Thailand" },
+              { img: attr4Img, name: "Big Buddha Phuket", desc: "35 min drive · Stunning island views", maps: "https://maps.google.com/?q=Big+Buddha+Phuket+Thailand" },
             ].map((attr, i) => (
-              <motion.div key={i} variants={fadeIn} data-testid={`card-attraction-${i}`} className="group cursor-pointer">
+              <motion.div key={i} variants={fadeIn} data-testid={`card-attraction-${i}`} className="group cursor-pointer" onClick={() => window.open(attr.maps, "_blank", "noopener,noreferrer")}>
                 <div className="overflow-hidden mb-4 relative aspect-[4/3]">
                   <img
                     src={attr.img}
