@@ -579,6 +579,7 @@ export function Home() {
                 <p className="text-sm text-muted-foreground mb-4 font-medium uppercase tracking-wider">Also available on</p>
                 <div className="flex gap-6 text-foreground/60 font-serif italic text-lg">
                   <a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Booking.com</a>
+                  <a href="https://www.tripadvisor.com/Hotel_Review-g293920-d34354902-Reviews-M2_Rooms_and_Stays_M2_Room_For_Rent-Phuket.html" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">TripAdvisor</a>
                   <a href="#" className="hover:text-primary transition-colors">Agoda</a>
                   <a href="#" className="hover:text-primary transition-colors">Airbnb</a>
                 </div>
@@ -659,6 +660,7 @@ export function Home() {
               <li><a href="https://www.instagram.com/m2rooms/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
               <li><a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Booking.com</a></li>
+              <li><a href="https://www.tripadvisor.com/Hotel_Review-g293920-d34354902-Reviews-M2_Rooms_and_Stays_M2_Room_For_Rent-Phuket.html" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">TripAdvisor</a></li>
               <li><a href="https://wa.me/66982221682" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
             </ul>
           </div>
