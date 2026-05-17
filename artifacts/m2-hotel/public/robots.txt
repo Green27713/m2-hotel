@@ -1,2 +1,11 @@
 User-agent: *
 Allow: /
+
+Disallow: /shop
+Disallow: /shop/
+Disallow: /services-store
+Disallow: /services-store/
+Disallow: /privacy-policy
+Disallow: /home
+
+Sitemap: https://www.m2roomsandstayspatong.com/sitemap.xml
