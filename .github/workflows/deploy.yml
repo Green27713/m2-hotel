@@ -37,9 +37,8 @@ jobs:
         run: pnpm --filter @workspace/m2-hotel run build:gh
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
-        working-directory: artifacts/m2-hotel
         with:
-          path: ./dist
+          path: ./artifacts/m2-hotel/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
