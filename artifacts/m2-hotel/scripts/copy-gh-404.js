@@ -15,4 +15,7 @@ if (!existsSync(indexFile)) {
 copyFileSync(indexFile, fallbackFile);
 if (!existsSync(publicFallbackDir)) mkdirSync(publicFallbackDir, { recursive: true });
 copyFileSync(indexFile, publicFallbackFile);
+// Also ensure the public folder contains index.html so publish_dir includes site root
+const publicIndexFile = resolve(publicFallbackDir, "index.html");
+copyFileSync(indexFile, publicIndexFile);
 console.log("Copied dist/index.html to dist/404.html and dist/public/404.html");
