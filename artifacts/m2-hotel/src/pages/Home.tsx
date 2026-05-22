@@ -566,10 +566,10 @@ export function Home() {
                   <div>
                     <h4 className="font-medium text-lg mb-1">Email</h4>
                     <a
-                      href="mailto:hello@m2roomsandstayspatong.com.com"
+                      href="mailto:hello@m2roomsandstayspatong.com"
                       className="text-muted-foreground font-light hover:text-primary transition-colors"
                     >
-                      hello@m2roomsandstayspatong.com.com
+                      hello@m2roomsandstayspatong.com
                     </a>
                   </div>
                 </div>

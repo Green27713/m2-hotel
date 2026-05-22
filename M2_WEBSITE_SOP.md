@@ -186,7 +186,7 @@ These are the exact files to edit for each type of change. Do not edit any other
 ### TASK M-06: Contact Information Verification
 - Call each number listed on the website to confirm it is active
 - Send a test WhatsApp to both numbers (+66 63 268 6289 and +66 063 268 6289)
-- Send a test email to hello@m2roomsandstayspatong.com.com and confirm receipt
+- Send a test email to hello@m2roomsandstayspatong.com and confirm receipt
 
 ### TASK M-07: Mobile Responsiveness Check
 - Open the full website on a smartphone (not just the desktop preview)
@@ -498,7 +498,7 @@ To add a new restaurant, bar, or attraction to the map:
 |-------|--------------|
 | Main WhatsApp/Phone | +66 63 268 6289 |
 | Manager Phone | +66 063 268 6289 |
-| Email | hello@m2roomsandstayspatong.com.com |
+| Email | hello@m2roomsandstayspatong.com |
 | Instagram | instagram.com/m2rooms/ |
 | Booking.com | booking.com/hotel/th/m2-room-for-rent |
 
