@@ -128,7 +128,7 @@ These are the exact files to edit for each type of change. Do not edit any other
 
 ### TASK W-03: WhatsApp & Contact Link Test
 - On a mobile phone, open the website and tap the WhatsApp chat button
-- Confirm it opens WhatsApp and routes to the correct number (+66 098 222 1682)
+- Confirm it opens WhatsApp and routes to the correct number (+66 63 268 6289)
 - Tap the phone number in the navbar — confirm it dials
 - If broken: contact AI agent immediately
 
@@ -185,8 +185,8 @@ These are the exact files to edit for each type of change. Do not edit any other
 
 ### TASK M-06: Contact Information Verification
 - Call each number listed on the website to confirm it is active
-- Send a test WhatsApp to both numbers (+66 098 222 1682 and +66 063 268 6289)
-- Send a test email to hello@m2rooms.com and confirm receipt
+- Send a test WhatsApp to both numbers (+66 63 268 6289 and +66 063 268 6289)
+- Send a test email to hello@m2roomsandstayspatong.com.com and confirm receipt
 
 ### TASK M-07: Mobile Responsiveness Check
 - Open the full website on a smartphone (not just the desktop preview)
@@ -496,9 +496,9 @@ To add a new restaurant, bar, or attraction to the map:
 ### 15.1 Current Contact Details on the Website
 | Field | Current Value |
 |-------|--------------|
-| Main WhatsApp/Phone | +66 098 222 1682 |
+| Main WhatsApp/Phone | +66 63 268 6289 |
 | Manager Phone | +66 063 268 6289 |
-| Email | hello@m2rooms.com |
+| Email | hello@m2roomsandstayspatong.com.com |
 | Instagram | instagram.com/m2rooms/ |
 | Booking.com | booking.com/hotel/th/m2-room-for-rent |
 
@@ -509,8 +509,8 @@ If a number changes, this update must be made in **three places**:
 3. The Footer (`Home.tsx` — the WhatsApp link)
 
 Always use the international format without spaces in the wa.me link:
-- `+66 098 222 1682` displays as: `+66 098 222 1682`
-- The link format is: `https://wa.me/66982221682` (no leading zero, no spaces)
+- `+66 63 268 6289` displays as: `+66 63 268 6289`
+- The link format is: `https://wa.me/66632686289` (no leading zero, no spaces)
 
 ### 15.3 Adding an Email Address
 Send the AI agent: "Please update the contact email to [new email address]."

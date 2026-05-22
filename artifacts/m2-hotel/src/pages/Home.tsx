@@ -535,13 +535,13 @@ export function Home() {
                   <div>
                     <h4 className="font-medium text-lg mb-1">WhatsApp / Reservations</h4>
                     <a
-                      href="https://wa.me/66982221682"
+                      href="https://wa.me/66632686289"
                       target="_blank"
                       rel="noreferrer"
                       data-testid="link-whatsapp"
                       className="text-muted-foreground font-light hover:text-primary transition-colors block"
                     >
-                      +66 098 222 1682
+                      +66 63 268 6289
                     </a>
                     <p className="text-xs text-muted-foreground/60 mt-1">WhatsApp or call</p>
                   </div>
@@ -566,10 +566,10 @@ export function Home() {
                   <div>
                     <h4 className="font-medium text-lg mb-1">Email</h4>
                     <a
-                      href="mailto:hello@m2rooms.com"
+                      href="mailto:hello@m2roomsandstayspatong.com.com"
                       className="text-muted-foreground font-light hover:text-primary transition-colors"
                     >
-                      hello@m2rooms.com
+                      hello@m2roomsandstayspatong.com.com
                     </a>
                   </div>
                 </div>
@@ -661,7 +661,7 @@ export function Home() {
               <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
               <li><a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Booking.com</a></li>
               <li><a href="https://www.tripadvisor.com/Hotel_Review-g293920-d34354902-Reviews-M2_Rooms_and_Stays_M2_Room_For_Rent-Phuket.html" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">TripAdvisor</a></li>
-              <li><a href="https://wa.me/66982221682" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
+              <li><a href="https://wa.me/66632686289" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">WhatsApp</a></li>
             </ul>
           </div>
         </div>

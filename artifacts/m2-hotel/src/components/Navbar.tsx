@@ -88,7 +88,7 @@ export function Navbar() {
               }`}
             >
               <PhoneCall size={14} />
-              <span>+66 098 222 1682</span>
+              <span>+66 63 268 6289</span>
             </a>
             <button
               onClick={() => handleNavClick("#contact")}
