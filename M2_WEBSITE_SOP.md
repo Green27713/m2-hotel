@@ -348,6 +348,42 @@ Content:
 Separate paragraphs with a blank line.]
 ```
 
+### 11.2.1 Permalinks & Slugs
+Every blog post should include a stable, SEO-friendly `slug` used as the post's permalink. The `slug` becomes part of the post URL (e.g. `/blog/skip-bangla-road-3-better-ways-to-walk-to-patong-beach`).
+
+How to add a slug (self-service):
+- Open `artifacts/m2-hotel/src/components/Blog.tsx` and find the `const posts = [...]` array.
+- Add a `slug` field to the new post object, using lowercase, hyphen-separated words, no punctuation, and keeping it short and descriptive.
+- Example: `slug: "skip-bangla-road-3-better-ways-to-walk-to-patong-beach"`.
+
+Why it matters:
+- Readable URLs help users and improve SEO.
+- Used for sharing, canonical links, and social/Open Graph tags.
+- Do not change a published slug; if you must, add a redirect.
+
+### 11.2.2 Preview & Publish
+After adding or editing a post, preview locally and then push changes to GitHub so the automated workflow builds and deploys the site.
+
+Local preview (dev server):
+```bash
+pnpm --filter @workspace/m2-hotel run dev
+```
+
+Build for GitHub Pages (the repository has a workflow that runs this on push):
+```bash
+pnpm --filter @workspace/m2-hotel run build:gh
+```
+
+Publishing (push source changes to `main`):
+- Commit your changes and push to the `main` branch. The GitHub Actions workflow at `.github/workflows/deploy.yml` will build and publish the site to GitHub Pages automatically.
+
+Example commands (run from the workspace root):
+```bash
+git add artifacts/m2-hotel/src/components/Blog.tsx M2_WEBSITE_SOP.md
+git commit -m "Add blog post + slug; update SOP with publishing steps"
+git push origin main
+```
+
 ### 11.3 High-Performing Blog Topics (Ideas Bank)
 
 **Evergreen posts (relevant all year):**
