@@ -587,47 +587,73 @@ export function Home() {
             </div>
 
             <Card className="bg-card border-border/50 shadow-lg">
-              <CardContent className="p-8 md:p-10">
-                <h4 className="font-serif text-2xl font-medium mb-8">Send an Enquiry</h4>
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Name</label>
-                      <Input data-testid="input-name" placeholder="Your name" className="bg-background" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Email</label>
-                      <Input data-testid="input-email" type="email" placeholder="your@email.com" className="bg-background" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Check-in / Check-out</label>
-                      <Input data-testid="input-dates" type="text" placeholder="e.g. 10 Dec – 14 Dec" className="bg-background" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Guests</label>
-                      <Input data-testid="input-guests" type="number" placeholder="2" min="1" className="bg-background" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Message</label>
-                    <Textarea
-                      data-testid="input-message"
-                      placeholder="Any special requests or questions?"
-                      className="bg-background min-h-[120px]"
-                    />
-                  </div>
-                  <button
-                    data-testid="button-submit-enquiry"
-                    type="submit"
-                    className="w-full py-4 bg-primary text-primary-foreground font-bold tracking-[0.1em] uppercase hover:bg-primary/90 transition-colors"
-                  >
-                    Send Request
-                  </button>
-                </form>
-              </CardContent>
-            </Card>
+  <CardContent className="p-8 md:p-10">
+    <h4 className="font-serif text-2xl font-medium mb-8">Send an Enquiry</h4>
+    <form
+      className="space-y-6"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const btn = (e.currentTarget.querySelector("button[type='submit']") as HTMLButtonElement);
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+        const res = await fetch("https://formspree.io/f/mwvzqprv", {
+          method: "POST",
+          body: new FormData(e.currentTarget),
+          headers: { Accept: "application/json" },
+        });
+        if (res.ok) {
+          btn.textContent = "✓ Request Sent!";
+          (e.currentTarget as HTMLFormElement).reset();
+        } else {
+          btn.disabled = false;
+          btn.textContent = "Send Request";
+          alert("Something went wrong. Please WhatsApp or email us directly.");
+        }
+      }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Name</label>
+          <Input data-testid="input-name" name="name" placeholder="Your name" className="bg-background" required />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Email</label>
+          <Input data-testid="input-email" name="email" type="email" placeholder="your@email.com" className="bg-background" required />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Check-in Date</label>
+          <Input data-testid="input-checkin" name="checkin" type="date" className="bg-background" required />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Check-out Date</label>
+          <Input data-testid="input-checkout" name="checkout" type="date" className="bg-background" required />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Guests</label>
+        <Input data-testid="input-guests" name="guests" type="number" placeholder="2" min="1" className="bg-background" required />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Message</label>
+        <Textarea
+          data-testid="input-message"
+          name="message"
+          placeholder="Any special requests or questions?"
+          className="bg-background min-h-[120px]"
+        />
+      </div>
+      <button
+        data-testid="button-submit-enquiry"
+        type="submit"
+        className="w-full py-4 bg-primary text-primary-foreground font-bold tracking-[0.1em] uppercase hover:bg-primary/90 transition-colors"
+      >
+        Send Request
+      </button>
+    </form>
+  </CardContent>
+</Card>
           </div>
         </div>
       </section>
