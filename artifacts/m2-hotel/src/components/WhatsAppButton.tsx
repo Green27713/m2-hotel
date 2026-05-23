@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const WA_NUMBER = "66982221682";
+const WA_NUMBER = "66632686289";
 const WA_MESSAGE = "Hello! I'm interested in booking a room at M2 Rooms & Stays Patong. Could you let me know availability?";
 const WA_URL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`;
 
