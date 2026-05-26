@@ -715,25 +715,53 @@
 <section id="contact">
   <div class="container">
     <div class="contact-grid">
+
+      <!-- LEFT SIDE -->
       <div class="fade-in">
         <p class="section-label">Get in Touch</p>
         <h2 class="section-title">Book Direct for Best Rate</h2>
-        <p class="section-subtitle">We guarantee the lowest price when you book directly with us. Reach out for availability, special requests, or group bookings.</p>
+        <p class="section-subtitle">
+          We guarantee the lowest price when you book directly with us. 
+          Reach out for availability, special requests, or group bookings.
+        </p>
+
         <div class="contact-info-items">
+
           <div class="contact-info-item">
-            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <div><h4>M2 Room For Rent / M2 Rooms &amp; Stays</h4><p>Patong, Phuket 83150<br>Thailand</p></div>
-          </div>
-          <div class="contact-info-item">
-            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.59 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <div><h4>WhatsApp / Reservations</h4><a href="https://wa.me/66632686289" target="_blank" rel="noreferrer">+66 063 268 6289</a><p style="font-size:0.75rem;margin-top:0.25rem">WhatsApp or call</p></div>
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <div>
+              <h4>M2 Room For Rent / M2 Rooms &amp; Stays</h4>
+              <p>Patong, Phuket 83150<br>Thailand</p>
+            </div>
           </div>
 
           <div class="contact-info-item">
-            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <div><h4>Email</h4><a href="mailto:hello@m2roomsandstayspatong.com">hello@m2roomsandstayspatong.com</a></div>
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.59 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <div>
+              <h4>WhatsApp / Reservations</h4>
+              <a href="https://wa.me/66632686289" target="_blank" rel="noreferrer">+66 063 268 6289</a>
+              <p style="font-size:0.75rem;margin-top:0.25rem">WhatsApp or call</p>
+            </div>
           </div>
+
+          <div class="contact-info-item">
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <div>
+              <h4>Email</h4>
+              <a href="mailto:hello@m2roomsandstayspatong.com">hello@m2roomsandstayspatong.com</a>
+            </div>
+          </div>
+
         </div>
+
         <div class="contact-also">
           <p class="contact-also-label">Also available on</p>
           <div class="contact-also-links">
@@ -744,21 +772,50 @@
           </div>
         </div>
       </div>
+
+      <!-- RIGHT SIDE: FORMSPREE FORM WITH INLINE THANK YOU -->
       <div class="contact-form-card fade-in" style="transition-delay:0.2s">
         <h4>Send an Enquiry</h4>
-        <form id="enquiry-form" onsubmit="submitForm(event)">
+
+        <!-- SUCCESS MESSAGE (HIDDEN INITIALLY) -->
+        <div id="form-success" style="display:none; padding:1rem; background:#e6ffe6; border:1px solid #b2ffb2; border-radius:8px; margin-bottom:1rem;">
+          <h4 style="margin:0 0 0.5rem 0;">Thank you!</h4>
+          <p>Your enquiry has been sent. We will reply shortly.</p>
+        </div>
+
+        <!-- FORM -->
+        <form id="enquiry-form" action="https://formspree.io/f/mwvzqprv" method="POST">
+
           <div class="form-row">
-            <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your name" required /></div>
-            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required /></div>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" name="name" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
           </div>
+
           <div class="form-row">
-            <div class="form-group"><label>Check-in</label><input type="date" name="checkin" /></div>
-            <div class="form-group"><label>Check-out</label><input type="date" name="checkout" /></div>
+            <div class="form-group">
+              <label>Check-in</label>
+              <input type="date" name="checkin" />
+            </div>
+            <div class="form-group">
+              <label>Check-out</label>
+              <input type="date" name="checkout" />
+            </div>
           </div>
+
           <div class="form-row">
-            <div class="form-group"><label>Guests</label><input type="number" name="guests" placeholder="2" min="1" max="10" /></div>
-            <div class="form-group"><label>Room Type</label>
-              <select name="room" style="padding:0.75rem 1rem;border:1px solid var(--border);background:var(--bg);font-family:var(--font-sans);font-size:0.9rem;color:var(--fg);outline:none;width:100%;">
+            <div class="form-group">
+              <label>Guests</label>
+              <input type="number" name="guests" min="1" max="10" />
+            </div>
+            <div class="form-group">
+              <label>Room Type</label>
+              <select name="room">
                 <option value="">Any room</option>
                 <option value="deluxe-balcony">Deluxe with Balcony — ฿1,100</option>
                 <option value="deluxe-standard">Deluxe Standard — ฿1,100</option>
@@ -766,13 +823,36 @@
               </select>
             </div>
           </div>
-          <div class="form-group" style="margin-bottom:0"><label>Message</label><textarea name="message" placeholder="Any special requests or questions?"></textarea></div>
+
+          <div class="form-group">
+            <label>Message</label>
+            <textarea name="message"></textarea>
+          </div>
+
           <button type="submit" class="form-submit">Send Request</button>
         </form>
-        <div class="form-success" id="form-success">
-          <h4>✓ Message Received!</h4>
-          <p style="color:var(--muted);font-weight:300">Thank you — we'll be in touch within a few hours. For urgent enquiries, WhatsApp us directly at +66 063 268 6289.</p>
-        </div>
+
+        <!-- INLINE SUCCESS SCRIPT -->
+        <script>
+          document.getElementById('enquiry-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const data = new FormData(form);
+
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: data,
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+              form.style.display = 'none';
+              document.getElementById('form-success').style.display = 'block';
+            }
+          });
+        </script>
+
       </div>
     </div>
   </div>
