@@ -849,6 +849,18 @@
             if (response.ok) {
               form.style.display = 'none';
               document.getElementById('form-success').style.display = 'block';
+              if (response.ok) {
+  form.style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+
+  // Auto-reset after 6 seconds
+  setTimeout(() => {
+    document.getElementById('form-success').style.display = 'none';
+    form.reset();
+    form.style.display = 'block';
+  }, 6000);
+}
+
             }
           });
         </script>
