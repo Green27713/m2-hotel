@@ -847,16 +847,14 @@
       });
 
       if (response.ok) {
-        form.style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('form-success').style.display = 'none';
-          form.reset();
-          form.style.display = 'block';
-        }, 6000);
-      } else {
-        alert('Something went wrong. Please try WhatsApp or email us directly.');
-      }
+  form.style.cssText = 'display:none';
+  document.getElementById('form-success').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('form-success').style.display = 'none';
+    form.reset();
+    form.removeAttribute('style');
+  }, 6000);
+}
     } catch (error) {
       alert('Connection error. Please try WhatsApp or email us directly.');
     }
