@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
   <url>
     <loc>https://www.m2roomsandstayspatong.com/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Room Pages -->
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/rooms/deluxe-room-balcony.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/rooms/deluxe-room-standard.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/rooms/superior-room.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Blog Pages -->
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/blog/top-things-to-do-patong-beach.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/blog/best-thai-food-near-patong.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/blog/zag-club-paradise-complex-patong.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/blog/high-season-vs-low-season-phuket.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.m2roomsandstayspatong.com/blog/real-cost-of-staying-in-patong.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
