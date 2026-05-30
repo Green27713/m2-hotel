@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.m2roomsandstayspatong.com/sitemap.xml
