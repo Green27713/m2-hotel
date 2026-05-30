@@ -17,10 +17,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Prepare site files
+        run: |
+          mkdir -p _site
+          cp -r index.html favicon.svg CNAME images blog rooms location.html house-rules.html home.html robots.txt sitemap.xml 404.html _site/ 2>/dev/null || true
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./_site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
