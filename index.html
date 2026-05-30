@@ -133,10 +133,9 @@
       border-bottom: 2px solid transparent; cursor: pointer;
       transition: all 0.2s;
     }
-    .navbar-links button:hover { color: white; border-bottom-color: white; }
-    .navbar.scrolled .navbar-links button { color: rgba(26,31,46,0.65); }
-    .navbar.scrolled .navbar-links button:hover { color: var(--primary); border-bottom-color: var(--primary); }
-
+    .navbar-links button:hover, .navbar-links a:hover { color: white; border-bottom-color: white; }
+    .navbar.scrolled .navbar-links button, .navbar.scrolled .navbar-links a { color: rgba(26,31,46,0.65); }
+.navbar.scrolled .navbar-links button:hover, .navbar.scrolled .navbar-links a:hover { color: var(--primary); border-bottom-color: var(--primary); }
     /* Hamburger */
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
