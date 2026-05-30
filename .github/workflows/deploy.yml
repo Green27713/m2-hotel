@@ -20,7 +20,7 @@ jobs:
       - name: Prepare site files
         run: |
           mkdir -p _site
-          cp -r index.html favicon.svg CNAME images blog rooms location.html house-rules.html home.html robots.txt sitemap.xml 404.html _site/ 2>/dev/null || true
+          rsync -av --exclude='artifacts' --exclude='.git' --exclude='_site' --exclude='.github' --exclude='node_modules' . _site/
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
