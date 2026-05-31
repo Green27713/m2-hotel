@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M2 Blog Post Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Lato:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1a7a7a; --primary-dark: #145f5f; --secondary: #c9913d;
+      --bg: #f0ede8; --card: #ffffff; --fg: #1a1f2e; --muted: #6b7280;
+      --border: #e5e0d5; --success: #16a34a; --code-bg: #1a1f2e;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Lato', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--fg); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--fg); color: white; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--primary); }
+    .header-brand { display: flex; align-items: center; gap: 1rem; }
+    .header-icon { width: 40px; height: 40px; background: var(--primary); display: flex; align-items: center; justify-content: center; }
+    .header-icon svg { width: 22px; height: 22px; stroke: white; fill: none; }
+    .header-title { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 500; }
+    .header-sub { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 0.1rem; }
+    .header-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; background: var(--secondary); color: white; padding: 0.25rem 0.75rem; }
+
+    /* LAYOUT */
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 73px); }
+    .panel { padding: 2rem; overflow-y: auto; }
+    .panel-left { background: var(--card); border-right: 1px solid var(--border); }
+    .panel-right { background: var(--bg); }
+
+    /* PANEL HEADERS */
+    .panel-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+
+    /* FORM SECTIONS */
+    .form-section { margin-bottom: 2rem; }
+    .form-section-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--fg); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.625rem 0.875rem; border: 1px solid var(--border);
+      background: var(--bg); font-family: var(--font-sans); font-size: 0.875rem;
+      color: var(--fg); outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); background: white; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-group .hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; font-weight: 300; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* BODY EDITOR */
+    .body-editor { width: 100%; min-height: 300px; padding: 0.875rem; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg); resize: vertical; line-height: 1.7; outline: none; transition: border-color 0.2s; }
+    .body-editor:focus { border-color: var(--primary); background: white; }
+    .formatting-btns { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .fmt-btn { padding: 0.3rem 0.75rem; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700; border: 1px solid var(--border); background: white; color: var(--fg); cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em; }
+    .fmt-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* IMAGE PICKER */
+    .image-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+    .image-option { aspect-ratio: 16/9; cursor: pointer; border: 2px solid transparent; overflow: hidden; position: relative; transition: border-color 0.2s; }
+    .image-option img { width: 100%; height: 100%; object-fit: cover; }
+    .image-option.selected { border-color: var(--primary); }
+    .image-option.selected::after { content: '✓'; position: absolute; top: 4px; right: 4px; background: var(--primary); color: white; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; border-radius: 50%; }
+    .image-option-label { font-size: 0.6rem; text-align: center; color: var(--muted); margin-top: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* GENERATE BTN */
+    .generate-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
+    .generate-btn:hover { background: var(--primary-dark); }
+    .generate-btn svg { width: 18px; height: 18px; stroke: white; fill: none; }
+
+    /* OUTPUT TABS */
+    .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab { padding: 0.625rem 1.25rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; color: var(--muted); transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font-sans); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* OUTPUT BLOCKS */
+    .output-block { margin-bottom: 1.5rem; }
+    .output-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .copy-btn { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--fg); color: white; border: none; padding: 0.25rem 0.75rem; cursor: pointer; font-family: var(--font-sans); transition: background 0.2s; }
+    .copy-btn:hover { background: var(--primary); }
+    .copy-btn.copied { background: var(--success); }
+    .code-block { background: var(--code-bg); color: #e2e8f0; padding: 1rem; font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 300px; overflow-y: auto; border-radius: 0; }
+
+    /* PREVIEW */
+    .preview-card { background: white; border: 1px solid var(--border); overflow: hidden; }
+    .preview-img { height: 160px; background: var(--border); overflow: hidden; position: relative; }
+    .preview-img img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.8rem; }
+    .preview-category { position: absolute; top: 0.75rem; left: 0.75rem; background: var(--primary); color: white; padding: 0.2rem 0.6rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
+    .preview-body { padding: 1.25rem; }
+    .preview-title { font-family: var(--font-serif); font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; line-height: 1.4; color: var(--fg); }
+    .preview-excerpt { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; font-weight: 300; }
+    .preview-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .preview-meta { font-size: 0.7rem; color: var(--muted); }
+    .preview-read { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+    .empty-state-icon { width: 64px; height: 64px; background: var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+    .empty-state-icon svg { width: 32px; height: 32px; stroke: var(--muted); fill: none; }
+    .empty-state h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--fg); }
+    .empty-state p { font-size: 0.875rem; font-weight: 300; line-height: 1.6; }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+    .step { display: flex; gap: 1rem; align-items: flex-start; padding: 0.875rem; background: white; border: 1px solid var(--border); }
+    .step-num { width: 24px; height: 24px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; border-radius: 50%; }
+    .step-text { font-size: 0.8rem; color: var(--muted); font-weight: 300; line-height: 1.5; }
+    .step-text strong { color: var(--fg); font-weight: 700; }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .form-row { grid-template-columns: 1fr; }
+      .image-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </div>
+    <div>
+      <div class="header-title">Blog Post Generator</div>
+      <div class="header-sub">M2 Rooms &amp; Stays · Patong Beach</div>
+    </div>
+  </div>
+  <div class="header-badge">Admin Tool</div>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: FORM -->
+  <div class="panel panel-left">
+    <div class="panel-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Post Details
+    </div>
+
+    <!-- META -->
+    <div class="form-section">
+      <div class="form-section-label">Basic Info</div>
+
+      <div class="form-group">
+        <label>Post Title</label>
+        <input type="text" id="post-title" placeholder="e.g. Best Beaches Near Patong" oninput="updatePreview()" />
+      </div>
+
+      <div class="form-group">
+        <label>Excerpt <span style="font-weight:300;color:var(--muted)">(shown on blog card)</span></label>
+        <textarea id="post-excerpt" rows="3" placeholder="2-3 sentence summary shown on the blog index card..." oninput="updatePreview()"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="post-category" onchange="updatePreview()">
+            <option value="Travel Guide">Travel Guide</option>
+            <option value="Food & Drink">Food &amp; Drink</option>
+            <option value="Nightlife & Entertainment">Nightlife &amp; Entertainment</option>
+            <option value="Travel Tips">Travel Tips</option>
+            <option value="Location Guide">Location Guide</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Read Time</label>
+          <select id="post-readtime">
+            <option value="3 min read">3 min read</option>
+            <option value="4 min read">4 min read</option>
+            <option value="5 min read" selected>5 min read</option>
+            <option value="6 min read">6 min read</option>
+            <option value="7 min read">7 min read</option>
+            <option value="8 min read">8 min read</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Publish Date</label>
+          <input type="date" id="post-date" />
+        </div>
+        <div class="form-group">
+          <label>Post ID <span style="font-weight:300;color:var(--muted)">(next number)</span></label>
+          <input type="number" id="post-id" value="7" min="1" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Filename <span style="font-weight:300;color:var(--muted)">(no spaces, use hyphens)</span></label>
+        <input type="text" id="post-filename" placeholder="e.g. best-beaches-near-patong" oninput="updatePreview()" />
+        <div class="hint">Will become: blog/your-filename.html</div>
+      </div>
+    </div>
+
+    <!-- IMAGE -->
+    <div class="form-section">
+      <div class="form-section-label">Featured Image</div>
+      <div class="image-grid" id="image-grid"></div>
+    </div>
+
+    <!-- BODY -->
+    <div class="form-section">
+      <div class="form-section-label">Post Body</div>
+      <div class="formatting-btns">
+        <button class="fmt-btn" onclick="insertFormat('## ', '')">H2</button>
+        <button class="fmt-btn" onclick="insertFormat('### ', '')">H3</button>
+        <button class="fmt-btn" onclick="insertFormat('**', '**')"><strong>B</strong></button>
+        <button class="fmt-btn" onclick="insertFormat('\n\n', '')">¶ Para</button>
+        <button class="fmt-btn" onclick="insertFormat('\n- ', '')">— List</button>
+      </div>
+      <textarea class="body-editor" id="post-body" placeholder="Paste or type your post content here.
+
+Use ## for headings, ### for subheadings, **bold text** for bold.
+
+Each blank line creates a new paragraph.
+
+Example:
+## Why Patong Beach is Special
+
+Patong has something for everyone...
+
+### The Best Time to Visit
+
+The shoulder season from April to May..."></textarea>
+      <div class="hint">Blank lines = new paragraphs · ## Heading · **bold**</div>
+    </div>
+
+    <button class="generate-btn" onclick="generatePost()">
+      <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Generate Blog Post Files
+    </button>
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="panel panel-right">
+    <div class="panel-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Output &amp; Preview
+    </div>
+
+    <div id="empty-state" class="empty-state">
+      <div class="empty-state-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <h3>Ready to Generate</h3>
+      <p>Fill in the post details on the left and click Generate to get your files.</p>
+
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Fill in title, excerpt, category, date, and filename</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Choose a featured image from your site's image library</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Paste your post content into the body editor</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Click <strong>Generate</strong> — copy files to GitHub</div></div>
+      </div>
+    </div>
+
+    <div id="output-state" style="display:none">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('preview')">Preview</button>
+        <button class="tab" onclick="switchTab('html')">Blog Post HTML</button>
+        <button class="tab" onclick="switchTab('snippets')">Code Snippets</button>
+      </div>
+
+      <!-- PREVIEW TAB -->
+      <div class="tab-panel active" id="tab-preview">
+        <div class="output-block">
+          <div class="output-label">Blog Card Preview</div>
+          <div class="preview-card">
+            <div class="preview-img" id="preview-img-wrap">
+              <div class="preview-img-placeholder">No image selected</div>
+              <span class="preview-category" id="preview-category">Travel Guide</span>
+            </div>
+            <div class="preview-body">
+              <h3 class="preview-title" id="preview-title">Your post title will appear here</h3>
+              <p class="preview-excerpt" id="preview-excerpt">Your excerpt will appear here…</p>
+              <div class="preview-footer">
+                <span class="preview-meta" id="preview-meta">📅 — · ⏱ 5 min read</span>
+                <span class="preview-read">Read →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HTML TAB -->
+      <div class="tab-panel" id="tab-html">
+        <div class="output-block">
+          <div class="output-label">
+            Complete Blog Post HTML
+            <button class="copy-btn" onclick="copyCode('html-output', this)">Copy</button>
+          </div>
+          <div class="code-block" id="html-output"></div>
+          <div class="hint" style="margin-top:0.5rem">Upload as: <strong id="filename-hint">blog/your-filename.html</strong></div>
+        </div>
+      </div>
+
+      <!-- SNIPPETS TAB -->
+      <div class="tab-panel" id="tab-snippets">
+        <div class="output-block">
+          <div class="output-label">
+            Add to blog/index.html posts array
+            <button class="copy-btn" onclick="copyCode('snippet-index', this)">Copy</button>
+          </div>
+          <div class="code-block" id="snippet-index"></div>
+        </div>
+
+        <div class="output-block">
+          <div class="output-label">
+            Add to index.html blogUrls object
+            <button class="copy-btn" onclick="copyCode('snippet-urls', this)">Copy</button>
+          </div>
+          <div class="code-block" id="snippet-urls"></div>
+        </div>
+
+        <div class="output-block">
+          <div class="output-label">
+            Add to index.html blogPosts array
+            <button class="copy-btn" onclick="copyCode('snippet-posts', this)">Copy</button>
+          </div>
+          <div class="code-block" id="snippet-posts"></div>
+        </div>
+
+        <div class="output-block">
+          <div class="output-label">
+            Add to sitemap.xml
+            <button class="copy-btn" onclick="copyCode('snippet-sitemap', this)">Copy</button>
+          </div>
+          <div class="code-block" id="snippet-sitemap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Available images
+  const images = [
+    { file: 'M2_area_enhanced.jpg', label: 'M2 Area' },
+    { file: 'M2_lobby_enhanced.jpg', label: 'Lobby' },
+    { file: 'M2_deluxe_balcony_enhanced.jpg', label: 'Deluxe Balcony' },
+    { file: 'M2_deluxe_standard_enhanced.jpg', label: 'Deluxe Standard' },
+    { file: 'M2_superior_enhanced.jpg', label: 'Superior' },
+    { file: 'M2_superior_lamp_enhanced.jpg', label: 'Superior Lamp' },
+    { file: 'M2_room_mood_enhanced.jpg', label: 'Room Mood' },
+    { file: 'M2_exterior_enhanced.jpg', label: 'Exterior' },
+    { file: 'attraction1.png', label: 'Beach' },
+    { file: 'attraction2.png', label: 'Bangla Rd' },
+    { file: 'attraction3.png', label: 'Temple' },
+    { file: 'attraction4.png', label: 'Big Buddha' },
+  ];
+
+  let selectedImage = null;
+
+  // Build image grid
+  const grid = document.getElementById('image-grid');
+  images.forEach(img => {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="image-option" onclick="selectImage('${img.file}', this)">
+        <img src="images/${img.file}" alt="${img.label}" onerror="this.parentElement.style.background='#e5e0d5';this.remove()" />
+      </div>
+      <div class="image-option-label">${img.label}</div>
+    `;
+    grid.appendChild(wrap);
+  });
+
+  // Set default date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('post-date').value = today;
+
+  function selectImage(file, el) {
+    document.querySelectorAll('.image-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedImage = file;
+    updatePreview();
+  }
+
+  function updatePreview() {
+    document.getElementById('preview-title').textContent = document.getElementById('post-title').value || 'Your post title will appear here';
+    document.getElementById('preview-excerpt').textContent = document.getElementById('post-excerpt').value || 'Your excerpt will appear here…';
+    document.getElementById('preview-category').textContent = document.getElementById('post-category').value;
+    const date = document.getElementById('post-date').value;
+    const formatted = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '—';
+    document.getElementById('preview-meta').textContent = `📅 ${formatted} · ⏱ ${document.getElementById('post-readtime').value}`;
+    const imgWrap = document.getElementById('preview-img-wrap');
+    const existingImg = imgWrap.querySelector('img');
+    if (selectedImage) {
+      if (existingImg) { existingImg.src = `images/${selectedImage}`; }
+      else { imgWrap.innerHTML = `<img src="images/${selectedImage}" style="width:100%;height:100%;object-fit:cover" /><span class="preview-category" id="preview-category">${document.getElementById('post-category').value}</span>`; }
+    }
+  }
+
+  function insertFormat(before, after) {
+    const ta = document.getElementById('post-body');
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = ta.value.substring(start, end);
+    ta.value = ta.value.substring(0, start) + before + selected + after + ta.value.substring(end);
+    ta.focus();
+    ta.selectionStart = start + before.length;
+    ta.selectionEnd = start + before.length + selected.length;
+  }
+
+  function parseBody(raw) {
+    if (!raw.trim()) return '<p>Post content goes here.</p>';
+    const lines = raw.split('\n');
+    let html = '';
+    let listOpen = false;
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        if (listOpen) { html += '</ul>'; listOpen = false; }
+        return;
+      }
+      if (trimmed.startsWith('## ')) {
+        if (listOpen) { html += '</ul>'; listOpen = false; }
+        html += `\n        <h2>${esc(trimmed.slice(3))}</h2>`;
+      } else if (trimmed.startsWith('### ')) {
+        if (listOpen) { html += '</ul>'; listOpen = false; }
+        html += `\n        <h3>${esc(trimmed.slice(4))}</h3>`;
+      } else if (trimmed.startsWith('- ')) {
+        if (!listOpen) { html += '\n        <ul>'; listOpen = true; }
+        html += `\n          <li>${inlineFormat(esc(trimmed.slice(2)))}</li>`;
+      } else {
+        if (listOpen) { html += '\n        </ul>'; listOpen = false; }
+        html += `\n        <p>${inlineFormat(esc(trimmed))}</p>`;
+      }
+    });
+    if (listOpen) html += '\n        </ul>';
+    return html;
+  }
+
+  function inlineFormat(text) {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  }
+
+  function esc(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+  }
+
+  function formatDateShort(dateStr) {
+    if (!dateStr) return new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyCode(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function generatePost() {
+    const title = document.getElementById('post-title').value.trim();
+    const excerpt = document.getElementById('post-excerpt').value.trim();
+    const category = document.getElementById('post-category').value;
+    const readTime = document.getElementById('post-readtime').value;
+    const dateVal = document.getElementById('post-date').value;
+    const filename = document.getElementById('post-filename').value.trim().replace(/\.html$/, '');
+    const postId = document.getElementById('post-id').value;
+    const body = document.getElementById('post-body').value;
+    const imgFile = selectedImage || 'M2_area_enhanced.jpg';
+
+    if (!title) { alert('Please enter a post title.'); return; }
+    if (!filename) { alert('Please enter a filename (e.g. my-new-post).'); return; }
+
+    const dateFormatted = formatDate(dateVal);
+    const dateShort = formatDateShort(dateVal);
+    const parsedBody = parseBody(body);
+    const slug = filename;
+    const canonicalUrl = `https://www.m2roomsandstayspatong.com/blog/${slug}.html`;
+
+    // Generate full HTML
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PKR1WD0L4G"><\/script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PKR1WD0L4G');<\/script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+  <title>${esc(title)} | M2 Rooms &amp; Stays Patong Beach</title>
+  <meta name="description" content="${esc(excerpt)}" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="${canonicalUrl}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:title" content="${esc(title)}" />
+  <meta property="og:description" content="${esc(excerpt)}" />
+  <meta property="og:image" content="https://www.m2roomsandstayspatong.com/images/${imgFile}" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"${esc(title)}","datePublished":"${dateVal}","author":{"@type":"Organization","name":"M2 Rooms & Stays"},"publisher":{"@type":"Organization","name":"M2 Rooms & Stays","url":"https://www.m2roomsandstayspatong.com"}}<\/script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --primary: #1a7a7a; --primary-dark: #145f5f; --secondary: #c9913d; --bg: #f9f7f3; --card: #ffffff; --fg: #1a1f2e; --muted: #6b7280; --border: #e5e0d5; --font-serif: 'Playfair Display', Georgia, serif; --font-sans: 'Lato', sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--fg); overflow-x: hidden; line-height: 1.6; }
+    img { max-width: 100%; display: block; } a { text-decoration: none; color: inherit; }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(249,247,243,0.98); backdrop-filter: blur(8px); box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .navbar-top { padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    .navbar-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .navbar-logo { width: 60px; height: 60px; object-fit: contain; }
+    .navbar-brand-name { font-family: var(--font-serif); font-weight: 700; font-size: 1.1rem; color: var(--fg); }
+    .navbar-brand-sub { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .navbar-right { display: flex; align-items: center; gap: 1rem; }
+    .navbar-book { padding: 0.5rem 1.25rem; background: var(--primary); border: none; color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; font-family: var(--font-sans); text-decoration: none; display: inline-block; }
+    .navbar-book:hover { background: var(--primary-dark); }
+    .navbar-bottom { background: rgba(249,247,243,0.98); border-top: 1px solid rgba(229,224,213,0.4); }
+    .navbar-links { display: flex; align-items: center; justify-content: center; list-style: none; padding: 0 2rem; flex-wrap: wrap; }
+    .navbar-links a { padding: 0.625rem 1rem; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,31,46,0.65); border-bottom: 2px solid transparent; transition: all 0.2s; display: block; text-decoration: none; }
+    .navbar-links a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--fg); }
+    .mobile-nav { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0d4a4a; z-index: 2000; flex-direction: column; padding: 2rem; overflow-y: auto; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-close { align-self: flex-end; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; margin-bottom: 2rem; }
+    .mobile-nav a { color: rgba(255,255,255,0.8); font-size: 1.25rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
+    .blog-hero { padding-top: 8rem; background: var(--card); border-bottom: 1px solid var(--border); }
+    .blog-hero-img { width: 100%; height: 420px; overflow: hidden; position: relative; }
+    .blog-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+    .blog-hero-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+    .blog-hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; }
+    .blog-hero-inner { max-width: 52rem; margin: 0 auto; padding: 2rem 2rem; }
+    .blog-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+    .blog-hero h1 { font-family: var(--font-serif); font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 500; line-height: 1.2; margin-bottom: 1rem; }
+    .blog-hero-meta { display: flex; gap: 1.5rem; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .blog-hero-excerpt { font-size: 1.05rem; color: var(--muted); font-weight: 300; line-height: 1.7; border-left: 3px solid var(--secondary); padding-left: 1.25rem; }
+    .blog-content { max-width: 52rem; margin: 0 auto; padding: 3rem 2rem 6rem; }
+    .blog-content p { color: rgba(26,31,46,0.78); line-height: 1.9; margin-bottom: 1.5rem; font-size: 1.05rem; font-weight: 300; }
+    .blog-content h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; margin-top: 3rem; margin-bottom: 1rem; color: var(--fg); }
+    .blog-content h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 500; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--primary); }
+    .blog-content ul { margin: 1rem 0 1.5rem 1.5rem; }
+    .blog-content ul li { color: rgba(26,31,46,0.78); line-height: 1.8; margin-bottom: 0.5rem; font-weight: 300; font-size: 1.05rem; }
+    .blog-content strong { font-weight: 700; color: var(--fg); }
+    .blog-cta { background: var(--primary); color: white; padding: 3rem 2rem; text-align: center; margin: 3rem 0 0; }
+    .blog-cta h3 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 500; margin-bottom: 0.75rem; }
+    .blog-cta p { color: rgba(255,255,255,0.75); margin-bottom: 2rem; font-weight: 300; }
+    .blog-cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .blog-cta a { display: inline-block; padding: 0.875rem 2rem; font-family: var(--font-sans); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.2s; }
+    .blog-cta-primary { background: white; color: var(--primary); }
+    .blog-cta-primary:hover { background: var(--bg); }
+    .blog-cta-wa { background: #25d366; color: white; }
+    .blog-cta-wa:hover { background: #1fa855; }
+    .blog-back { max-width: 52rem; margin: 0 auto; padding: 1.5rem 2rem 0; }
+    .blog-back a { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+    footer { background: #0d4a4a; color: white; padding: 4rem 2rem; }
+    .footer-grid { max-width: 87rem; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+    .footer-brand { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
+    .footer-brand span { font-family: var(--font-sans); font-weight: 300; font-size: 1.4rem; }
+    .footer-aka { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem; }
+    .footer-desc { color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.7; font-size: 0.9rem; max-width: 24rem; }
+    .footer-col h5 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: white; margin-bottom: 1.5rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .footer-col ul a { color: rgba(255,255,255,0.5); font-weight: 300; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col ul a:hover { color: white; }
+    .footer-bottom { max-width: 87rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.3); font-size: 0.75rem; flex-wrap: wrap; gap: 1rem; }
+    .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; background: #25d366; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform 0.2s; }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    .whatsapp-float svg { width: 28px; height: 28px; fill: white; }
+    @media (max-width: 768px) { .navbar-links { display: none; } .hamburger { display: flex; } .blog-hero-img { height: 280px; } .footer-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; text-align: center; } .blog-content { padding: 2rem 1.5rem 4rem; } .blog-cta-btns { flex-direction: column; align-items: center; } }
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="navbar-top">
+    <a href="../index.html" class="navbar-brand">
+      <img src="../images/M2_Logo_transparent.png" onerror="this.style.display='none'" alt="M2 Rooms &amp; Stays" class="navbar-logo" />
+      <div><div class="navbar-brand-name">M2 Rooms &amp; Stays</div><div class="navbar-brand-sub">Patong Beach · Phuket · Thailand</div></div>
+    </a>
+    <div class="navbar-right">
+      <a href="../index.html#contact" class="navbar-book">Book Direct</a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="navbar-bottom">
+    <ul class="navbar-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#rooms">Rooms</a></li>
+      <li><a href="../index.html#amenities">Amenities</a></li>
+      <li><a href="../location.html">Location</a></li>
+      <li><a href="../index.html#attractions">Attractions</a></li>
+      <li><a href="../index.html#reviews">Reviews</a></li>
+      <li><a href="index.html">Blog</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+<div class="mobile-nav" id="mobile-nav">
+  <button class="mobile-nav-close" onclick="document.getElementById('mobile-nav').classList.remove('open')">✕</button>
+  <a href="../index.html#about">About</a>
+  <a href="../index.html#rooms">Rooms</a>
+  <a href="../location.html">Location</a>
+  <a href="index.html">Blog</a>
+  <a href="../faq.html">FAQ</a>
+  <a href="../index.html#contact" style="color:var(--secondary)">Book Direct</a>
+</div>
+<div class="blog-hero">
+  <div class="blog-hero-img">
+    <img src="../images/${imgFile}" alt="${esc(title)}" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a4a5a,#2a6a7a)';this.remove()" />
+    <div class="blog-hero-img-overlay"></div>
+  </div>
+  <div class="blog-hero-inner">
+    <p class="blog-tag">${esc(category)}</p>
+    <h1>${esc(title)}</h1>
+    <div class="blog-hero-meta">
+      <span>📅 ${dateFormatted}</span>
+      <span>⏱ ${readTime}</span>
+      <span>✍️ M2 Rooms &amp; Stays</span>
+    </div>
+    <p class="blog-hero-excerpt">${esc(excerpt)}</p>
+  </div>
+</div>
+<div class="blog-back"><a href="index.html">← Back to Blog</a></div>
+<article class="blog-content">
+        ${parsedBody}
+  <div class="blog-cta">
+    <h3>Ready to Stay in Patong?</h3>
+    <p>M2 Rooms &amp; Stays — located inside Paradise Complex on Rat U Tith 200 Pi Road. Clean modern rooms from ฿1,100/night.</p>
+    <div class="blog-cta-btns">
+      <a href="../index.html#contact" class="blog-cta-primary">Check Availability →</a>
+      <a href="https://wa.me/66632686289" target="_blank" rel="noreferrer" class="blog-cta-wa">WhatsApp Us</a>
+    </div>
+  </div>
+</article>
+<footer>
+  <div class="footer-grid">
+    <div>
+      <p class="footer-brand">M2 <span>Rooms &amp; Stays</span></p>
+      <p class="footer-aka">Also known as M2 Room For Rent</p>
+      <p class="footer-desc">Your personal sanctuary in Patong Beach. Located inside Paradise Complex, steps from the Zag Club.</p>
+    </div>
+    <div class="footer-col"><h5>Quick Links</h5><ul><li><a href="../index.html#about">About</a></li><li><a href="../index.html#rooms">Rooms</a></li><li><a href="../location.html">Location</a></li><li><a href="index.html">Blog</a></li><li><a href="../faq.html">FAQ</a></li><li><a href="../index.html#contact">Contact</a></li></ul></div>
+    <div class="footer-col"><h5>Connect</h5><ul><li><a href="https://www.instagram.com/m2rooms/" target="_blank" rel="noreferrer">Instagram</a></li><li><a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer">Booking.com</a></li><li><a href="https://wa.me/66632686289" target="_blank" rel="noreferrer">WhatsApp</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© <span id="year"></span> M2 Rooms &amp; Stays · M2 Room For Rent. All rights reserved.</p>
+    <p>Patong, Phuket 83150, Thailand</p>
+  </div>
+</footer>
+<a href="https://wa.me/66632686289" target="_blank" rel="noreferrer" class="whatsapp-float" aria-label="WhatsApp us">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobile-nav').classList.add('open'));
+  document.getElementById('year').textContent = new Date().getFullYear();
+<\/script>
+</body>
+</html>`;
+
+    // Index snippet
+    const indexSnippet = `    {
+      id: ${postId},
+      tag: '${category}',
+      title: '${title.replace(/'/g,"\\'")}',
+      excerpt: '${excerpt.replace(/'/g,"\\'").replace(/\n/g,' ')}',
+      date: '${dateShort}',
+      readTime: '${readTime}',
+      image: '../images/${imgFile}',
+      url: '${slug}.html'
+    },`;
+
+    // blogUrls snippet
+    const urlsSnippet = `    ${postId}: 'blog/${slug}.html',`;
+
+    // blogPosts snippet
+    const postsSnippet = `  {
+    id: ${postId},
+    tag: "${category}",
+    title: "${title.replace(/"/g,'\\"')}",
+    excerpt: "${excerpt.replace(/"/g,'\\"').replace(/\n/g,' ')}",
+    date: "${dateShort}",
+    readTime: "${readTime}",
+    color: "var(--primary)"
+  },`;
+
+    // Sitemap snippet
+    const sitemapSnippet = `  <url>
+    <loc>${canonicalUrl}</loc>
+    <lastmod>${dateVal}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+
+    // Populate outputs
+    document.getElementById('html-output').textContent = html;
+    document.getElementById('snippet-index').textContent = indexSnippet;
+    document.getElementById('snippet-urls').textContent = urlsSnippet;
+    document.getElementById('snippet-posts').textContent = postsSnippet;
+    document.getElementById('snippet-sitemap').textContent = sitemapSnippet;
+    document.getElementById('filename-hint').textContent = `blog/${slug}.html`;
+
+    // Show output
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('output-state').style.display = 'block';
+
+    // Switch to preview
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab').classList.add('active');
+    document.getElementById('tab-preview').classList.add('active');
+    updatePreview();
+  }
+</script>
+</body>
+</html>
