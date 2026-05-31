@@ -1092,7 +1092,7 @@ function renderBlog() {
     5: 'blog/real-cost-of-staying-in-patong.html',
     6: 'blog/where-to-stay-near-paradise-complex-patong.html'
   };
-  document.getElementById('blog-grid').innerHTML = blogPosts.map((p, i) => `
+  document.getElementById('blog-grid').innerHTML = blogPosts.slice(-3).map((p, i) => `
     <div class="blog-card fade-in" style="transition-delay:${i*0.1}s" onclick="window.location.href='${blogUrls[p.id] || '#'}'">
       <div class="blog-card-accent" style="background:${p.color}"></div>
       <div class="blog-body">
