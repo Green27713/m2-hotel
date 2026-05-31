@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M2 Admin — Local CMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Lato:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1a7a7a; --primary-dark: #145f5f; --secondary: #c9913d;
+      --bg: #f0ede8; --card: #ffffff; --fg: #1a1f2e; --muted: #6b7280;
+      --border: #e5e0d5; --success: #16a34a; --danger: #dc2626;
+      --code-bg: #1a1f2e; --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Lato', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--fg); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--fg); color: white; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 100; }
+    .header-brand { display: flex; align-items: center; gap: 0.875rem; }
+    .header-icon { width: 36px; height: 36px; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .header-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2; }
+    .header-title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 500; }
+    .header-sub { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .git-btn { padding: 0.5rem 1rem; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+    .git-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-pull { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); }
+    .btn-pull:hover { background: rgba(255,255,255,0.2); color: white; }
+    .btn-push { background: var(--success); color: white; }
+    .btn-push:hover { background: #15803d; }
+    .btn-push:disabled { background: var(--muted); cursor: not-allowed; }
+    .git-status { font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.05em; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 0.875rem 1.5rem; font-size: 0.8rem; font-weight: 500; z-index: 9999; transform: translateY(4rem); opacity: 0; transition: all 0.3s; max-width: 320px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-success { background: var(--success); color: white; }
+    .toast-error { background: var(--danger); color: white; }
+    .toast-info { background: var(--fg); color: white; }
+
+    /* LAYOUT */
+    .layout { display: grid; grid-template-columns: 280px 1fr 1fr; height: calc(100vh - 64px); overflow: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .sidebar-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.875rem; }
+    .new-post-btn { width: 100%; padding: 0.625rem; background: var(--primary); color: white; border: none; font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .new-post-btn:hover { background: var(--primary-dark); }
+    .new-post-btn svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2; }
+    .post-list { flex: 1; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.375rem; }
+    .post-item { padding: 0.875rem 1rem; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+    .post-item:hover { background: var(--bg); border-color: var(--border); }
+    .post-item.active { background: rgba(26,122,122,0.06); border-color: var(--primary); }
+    .post-item-title { font-size: 0.825rem; font-weight: 500; line-height: 1.4; margin-bottom: 0.25rem; color: var(--fg); }
+    .post-item-meta { font-size: 0.7rem; color: var(--muted); font-weight: 300; }
+    .post-item-tag { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.25rem; }
+    .no-posts { padding: 2rem; text-align: center; color: var(--muted); font-size: 0.8rem; font-weight: 300; }
+
+    /* FORM PANEL */
+    .form-panel { overflow-y: auto; padding: 1.5rem; border-right: 1px solid var(--border); background: var(--card); }
+    .form-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .form-panel-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); }
+    .mode-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; }
+    .mode-new { background: var(--primary); color: white; }
+    .mode-edit { background: var(--secondary); color: white; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--fg); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-sans); font-size: 0.825rem; color: var(--fg); outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); background: white; }
+    .form-group textarea { resize: vertical; }
+    .hint { font-size: 0.65rem; color: var(--muted); margin-top: 0.25rem; font-weight: 300; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .section-divider { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin: 1.25rem 0 0.875rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+    /* IMAGE PICKER */
+    .image-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.375rem; }
+    .image-option { aspect-ratio: 16/9; cursor: pointer; border: 2px solid transparent; overflow: hidden; position: relative; }
+    .image-option img { width: 100%; height: 100%; object-fit: cover; }
+    .image-option.selected { border-color: var(--primary); }
+    .image-option.selected::after { content: '✓'; position: absolute; top: 3px; right: 3px; background: var(--primary); color: white; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; border-radius: 50%; }
+    .image-label { font-size: 0.55rem; text-align: center; color: var(--muted); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* BODY EDITOR */
+    .fmt-btns { display: flex; gap: 0.375rem; margin-bottom: 0.375rem; flex-wrap: wrap; }
+    .fmt-btn { padding: 0.25rem 0.625rem; font-size: 0.65rem; font-weight: 700; border: 1px solid var(--border); background: white; color: var(--fg); cursor: pointer; font-family: var(--font-sans); transition: all 0.15s; }
+    .fmt-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .body-editor { width: 100%; min-height: 220px; padding: 0.75rem; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg); resize: vertical; line-height: 1.7; outline: none; transition: border-color 0.2s; }
+    .body-editor:focus { border-color: var(--primary); background: white; }
+
+    /* ACTION BUTTONS */
+    .action-btns { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+    .save-btn { flex: 1; padding: 0.75rem; background: var(--primary); color: white; border: none; font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .save-btn:hover { background: var(--primary-dark); }
+    .delete-btn { padding: 0.75rem 1rem; background: none; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .delete-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* OUTPUT PANEL */
+    .output-panel { overflow-y: auto; padding: 1.5rem; background: var(--bg); }
+    .output-panel-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 1.25rem; padding-bottom: 0.875rem; border-bottom: 2px solid var(--primary); }
+
+    /* PREVIEW CARD */
+    .preview-card { background: white; border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
+    .preview-img { height: 140px; background: var(--border); overflow: hidden; position: relative; }
+    .preview-img img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-cat { position: absolute; top: 0.625rem; left: 0.625rem; background: var(--primary); color: white; padding: 0.2rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .preview-body { padding: 1rem; }
+    .preview-title { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; line-height: 1.4; }
+    .preview-excerpt { font-size: 0.775rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.875rem; font-weight: 300; }
+    .preview-footer { display: flex; justify-content: space-between; padding-top: 0.625rem; border-top: 1px solid var(--border); }
+    .preview-meta { font-size: 0.68rem; color: var(--muted); }
+    .preview-read { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+
+    /* SNIPPET BLOCKS */
+    .snippet-block { margin-bottom: 1.25rem; }
+    .snippet-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.375rem; display: flex; justify-content: space-between; align-items: center; }
+    .copy-btn { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--fg); color: white; border: none; padding: 0.2rem 0.625rem; cursor: pointer; font-family: var(--font-sans); }
+    .copy-btn:hover { background: var(--primary); }
+    .copy-btn.copied { background: var(--success); }
+    .code-block { background: var(--code-bg); color: #e2e8f0; padding: 0.875rem; font-family: var(--font-mono); font-size: 0.68rem; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 180px; overflow-y: auto; }
+
+    /* EMPTY STATE */
+    .empty-form { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--muted); padding: 2rem; }
+    .empty-form svg { width: 48px; height: 48px; stroke: var(--border); fill: none; stroke-width: 1.5; margin-bottom: 1rem; }
+    .empty-form h3 { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 500; color: var(--fg); margin-bottom: 0.5rem; }
+    .empty-form p { font-size: 0.8rem; font-weight: 300; line-height: 1.6; }
+
+    /* LOADING */
+    .loading { opacity: 0.5; pointer-events: none; }
+    .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </div>
+    <div>
+      <div class="header-title">M2 Blog Admin</div>
+      <div class="header-sub">Local CMS · Patong Beach</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="git-status" id="git-status">Loading…</span>
+    <button class="git-btn btn-pull" onclick="gitAction('pull')">
+      <svg viewBox="0 0 24 24"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+      Pull from GitHub
+    </button>
+    <button class="git-btn btn-push" onclick="gitAction('push')" id="push-btn">
+      <svg viewBox="0 0 24 24"><polyline points="16 7 12 3 8 7"/><line x1="12" y1="21" x2="12" y2="3"/></svg>
+      Push to GitHub
+    </button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR: POST LIST -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Blog Posts</div>
+      <button class="new-post-btn" onclick="newPost()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Post
+      </button>
+    </div>
+    <div class="post-list" id="post-list">
+      <div class="no-posts">Loading posts…</div>
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel" id="form-panel">
+    <div class="empty-form" id="empty-form">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <h3>Select or create a post</h3>
+      <p>Choose a post from the sidebar to edit it, or click New Post to create one from scratch.</p>
+    </div>
+    <div id="post-form" style="display:none">
+      <div class="form-panel-header">
+        <span class="form-panel-title" id="form-title">New Post</span>
+        <span class="mode-badge mode-new" id="mode-badge">New</span>
+      </div>
+
+      <!-- META -->
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="post-title" oninput="updatePreview()" placeholder="Post title" />
+      </div>
+      <div class="form-group">
+        <label>Excerpt</label>
+        <textarea id="post-excerpt" rows="2" oninput="updatePreview()" placeholder="2-3 sentence summary for the blog card…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="post-category" onchange="updatePreview()">
+            <option>Travel Guide</option>
+            <option>Food &amp; Drink</option>
+            <option>Nightlife &amp; Entertainment</option>
+            <option>Travel Tips</option>
+            <option>Location Guide</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Read Time</label>
+          <select id="post-readtime">
+            <option>3 min read</option>
+            <option>4 min read</option>
+            <option selected>5 min read</option>
+            <option>6 min read</option>
+            <option>7 min read</option>
+            <option>8 min read</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="post-date" />
+        </div>
+        <div class="form-group">
+          <label>Post ID</label>
+          <input type="number" id="post-id" value="7" min="1" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Filename <span style="font-weight:300;color:var(--muted)">(hyphens, no spaces)</span></label>
+        <input type="text" id="post-filename" placeholder="e.g. best-beaches-patong" />
+        <div class="hint" id="filename-hint">blog/your-filename.html</div>
+      </div>
+
+      <!-- IMAGE -->
+      <div class="section-divider">Featured Image</div>
+      <div class="image-grid" id="image-grid"></div>
+
+      <!-- INTERNAL LINK -->
+      <div class="section-divider">Internal Link <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></div>
+      <div class="form-group">
+        <label>Link Text</label>
+        <input type="text" id="link-text" placeholder="e.g. Deluxe Room with Balcony" />
+      </div>
+      <div class="form-group">
+        <label>Link Destination</label>
+        <select id="link-url">
+          <option value="">— None —</option>
+          <option value="../rooms/deluxe-room-balcony.html">Deluxe Room with Balcony</option>
+          <option value="../rooms/deluxe-room-standard.html">Deluxe Room Standard</option>
+          <option value="../rooms/superior-room.html">Superior Room</option>
+          <option value="../index.html#rooms">All Rooms</option>
+          <option value="../index.html#contact">Book Direct</option>
+          <option value="../location.html">Location Page</option>
+          <option value="../faq.html">FAQ Page</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Link Sentence</label>
+        <input type="text" id="link-sentence" placeholder="Our Deluxe Room with Balcony is the perfect base for exploring Patong." />
+        <div class="hint">Link text above will be hyperlinked within this sentence.</div>
+      </div>
+
+      <!-- BODY -->
+      <div class="section-divider">Post Body</div>
+      <div class="fmt-btns">
+        <button class="fmt-btn" onclick="insertFmt('## ','')">H2</button>
+        <button class="fmt-btn" onclick="insertFmt('### ','')">H3</button>
+        <button class="fmt-btn" onclick="insertFmt('**','**')"><strong>B</strong></button>
+        <button class="fmt-btn" onclick="insertFmt('\n\n','')">¶</button>
+        <button class="fmt-btn" onclick="insertFmt('\n- ','')">— List</button>
+      </div>
+      <textarea class="body-editor" id="post-body" placeholder="Paste or type your content here.
+
+## Section Heading
+### Sub Heading
+**Bold text**
+
+- List item one
+- List item two"></textarea>
+
+      <div class="action-btns">
+        <button class="save-btn" onclick="savePost()">💾 Save &amp; Generate</button>
+        <button class="delete-btn" id="delete-btn" onclick="deletePost()" style="display:none">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT PANEL -->
+  <div class="output-panel">
+    <div class="output-panel-title">Preview &amp; Snippets</div>
+
+    <div class="preview-card">
+      <div class="preview-img" id="preview-img-wrap">
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.75rem;">No image selected</div>
+        <span class="preview-cat" id="preview-cat">Travel Guide</span>
+      </div>
+      <div class="preview-body">
+        <p class="preview-title" id="preview-title">Post title</p>
+        <p class="preview-excerpt" id="preview-excerpt">Excerpt will appear here…</p>
+        <div class="preview-footer">
+          <span class="preview-meta" id="preview-meta">📅 — · ⏱ 5 min read</span>
+          <span class="preview-read">Read →</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="snippets-area" style="display:none">
+      <div class="snippet-block">
+        <div class="snippet-label">blog/index.html — posts array entry<button class="copy-btn" onclick="copySnippet('snip-index',this)">Copy</button></div>
+        <div class="code-block" id="snip-index"></div>
+      </div>
+      <div class="snippet-block">
+        <div class="snippet-label">index.html — blogUrls entry<button class="copy-btn" onclick="copySnippet('snip-urls',this)">Copy</button></div>
+        <div class="code-block" id="snip-urls"></div>
+      </div>
+      <div class="snippet-block">
+        <div class="snippet-label">index.html — blogPosts entry<button class="copy-btn" onclick="copySnippet('snip-posts',this)">Copy</button></div>
+        <div class="code-block" id="snip-posts"></div>
+      </div>
+      <div class="snippet-block">
+        <div class="snippet-label">sitemap.xml entry<button class="copy-btn" onclick="copySnippet('snip-sitemap',this)">Copy</button></div>
+        <div class="code-block" id="snip-sitemap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://localhost:3000';
+  let selectedImage = null;
+  let currentFile = null;
+  let isEditMode = false;
+
+  // ── TOAST ────────────────────────────────────────────────────────────────
+  function showToast(msg, type='info') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast toast-${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── LOAD POSTS ───────────────────────────────────────────────────────────
+  async function loadPosts() {
+    try {
+      const res = await fetch(`${API}/api/posts`);
+      const posts = await res.json();
+      const list = document.getElementById('post-list');
+      if (!posts.length) {
+        list.innerHTML = '<div class="no-posts">No blog posts found.<br>Click New Post to create one.</div>';
+        return;
+      }
+      list.innerHTML = posts.map(p => `
+        <div class="post-item" onclick="loadPost('${p.filename}')" id="item-${p.filename}">
+          <div class="post-item-title">${p.title}</div>
+          <div class="post-item-meta">${p.filename}</div>
+        </div>
+      `).join('');
+    } catch(e) {
+      document.getElementById('post-list').innerHTML = '<div class="no-posts" style="color:var(--danger)">Server not reachable.<br>Is server.js running?</div>';
+    }
+  }
+
+  // ── LOAD IMAGES ──────────────────────────────────────────────────────────
+  async function loadImages() {
+    try {
+      const res = await fetch(`${API}/api/images`);
+      const images = await res.json();
+      const grid = document.getElementById('image-grid');
+      grid.innerHTML = images.map(f => `
+        <div>
+          <div class="image-option" onclick="selectImage('${f}', this)">
+            <img src="${API}/images/${f}" alt="${f}" onerror="this.parentElement.style.background='#e5e0d5';this.remove()" />
+          </div>
+          <div class="image-label">${f.replace(/\.(jpg|jpeg|png|webp)$/i,'')}</div>
+        </div>
+      `).join('');
+    } catch(e) {}
+  }
+
+  // ── LOAD SINGLE POST ─────────────────────────────────────────────────────
+  async function loadPost(filename) {
+    document.querySelectorAll('.post-item').forEach(i => i.classList.remove('active'));
+    const item = document.getElementById(`item-${filename}`);
+    if (item) item.classList.add('active');
+
+    try {
+      const res = await fetch(`${API}/api/post?file=${filename}`);
+      const post = await res.json();
+
+      document.getElementById('empty-form').style.display = 'none';
+      document.getElementById('post-form').style.display = 'block';
+      document.getElementById('form-title').textContent = 'Edit Post';
+      document.getElementById('mode-badge').textContent = 'Editing';
+      document.getElementById('mode-badge').className = 'mode-badge mode-edit';
+      document.getElementById('delete-btn').style.display = 'block';
+
+      document.getElementById('post-title').value = post.title || '';
+      document.getElementById('post-excerpt').value = post.excerpt || '';
+      document.getElementById('post-category').value = post.category || 'Travel Guide';
+      document.getElementById('post-date').value = post.date || '';
+      document.getElementById('post-filename').value = filename.replace('.html','');
+      document.getElementById('post-body').value = post.body || '';
+      document.getElementById('link-text').value = post.linkText || '';
+      document.getElementById('link-url').value = post.linkUrl || '';
+
+      // Set image
+      selectedImage = post.image || null;
+      document.querySelectorAll('.image-option').forEach(o => o.classList.remove('selected'));
+      if (selectedImage) {
+        const imgs = document.querySelectorAll('.image-option img');
+        imgs.forEach(img => {
+          if (img.src.includes(selectedImage)) img.parentElement.classList.add('selected');
+        });
+      }
+
+      currentFile = filename;
+      isEditMode = true;
+      document.getElementById('filename-hint').textContent = `blog/${filename}`;
+      updatePreview();
+    } catch(e) {
+      showToast('Failed to load post', 'error');
+    }
+  }
+
+  // ── NEW POST ─────────────────────────────────────────────────────────────
+  function newPost() {
+    document.querySelectorAll('.post-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('empty-form').style.display = 'none';
+    document.getElementById('post-form').style.display = 'block';
+    document.getElementById('form-title').textContent = 'New Post';
+    document.getElementById('mode-badge').textContent = 'New';
+    document.getElementById('mode-badge').className = 'mode-badge mode-new';
+    document.getElementById('delete-btn').style.display = 'none';
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-excerpt').value = '';
+    document.getElementById('post-category').value = 'Travel Guide';
+    document.getElementById('post-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('post-filename').value = '';
+    document.getElementById('post-body').value = '';
+    document.getElementById('link-text').value = '';
+    document.getElementById('link-url').value = '';
+    document.getElementById('link-sentence').value = '';
+    document.getElementById('filename-hint').textContent = 'blog/your-filename.html';
+    selectedImage = null;
+    document.querySelectorAll('.image-option').forEach(o => o.classList.remove('selected'));
+    currentFile = null;
+    isEditMode = false;
+    document.getElementById('snippets-area').style.display = 'none';
+    updatePreview();
+  }
+
+  // ── SELECT IMAGE ─────────────────────────────────────────────────────────
+  function selectImage(file, el) {
+    document.querySelectorAll('.image-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedImage = file;
+    updatePreview();
+  }
+
+  // ── FORMAT HELPERS ───────────────────────────────────────────────────────
+  function insertFmt(before, after) {
+    const ta = document.getElementById('post-body');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    const sel = ta.value.substring(s, e);
+    ta.value = ta.value.substring(0,s) + before + sel + after + ta.value.substring(e);
+    ta.focus();
+    ta.selectionStart = s + before.length;
+    ta.selectionEnd = s + before.length + sel.length;
+  }
+
+  // ── PREVIEW ──────────────────────────────────────────────────────────────
+  function updatePreview() {
+    const title = document.getElementById('post-title').value || 'Post title';
+    const excerpt = document.getElementById('post-excerpt').value || 'Excerpt will appear here…';
+    const cat = document.getElementById('post-category').value;
+    const date = document.getElementById('post-date').value;
+    const rt = document.getElementById('post-readtime').value;
+    const filename = document.getElementById('post-filename').value;
+
+    document.getElementById('preview-title').textContent = title;
+    document.getElementById('preview-excerpt').textContent = excerpt;
+    document.getElementById('preview-cat').textContent = cat;
+    const formatted = date ? new Date(date+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+    document.getElementById('preview-meta').textContent = `📅 ${formatted} · ⏱ ${rt}`;
+    document.getElementById('filename-hint').textContent = filename ? `blog/${filename}.html` : 'blog/your-filename.html';
+
+    const wrap = document.getElementById('preview-img-wrap');
+    if (selectedImage) {
+      const existing = wrap.querySelector('img');
+      if (existing) { existing.src = `${API}/images/${selectedImage}`; }
+      else { wrap.innerHTML = `<img src="${API}/images/${selectedImage}" style="width:100%;height:100%;object-fit:cover"><span class="preview-cat">${cat}</span>`; }
+    }
+  }
+
+  // ── PARSE BODY ───────────────────────────────────────────────────────────
+  function parseBody(raw) {
+    if (!raw.trim()) return '<p>Post content goes here.</p>';
+    const lines = raw.split('\n');
+    let html = '', listOpen = false;
+    lines.forEach(line => {
+      const t = line.trim();
+      if (!t) { if (listOpen) { html += '</ul>'; listOpen = false; } return; }
+      if (t.startsWith('## ')) { if (listOpen){html+='</ul>';listOpen=false;} html+=`\n        <h2>${e(t.slice(3))}</h2>`; }
+      else if (t.startsWith('### ')) { if (listOpen){html+='</ul>';listOpen=false;} html+=`\n        <h3>${e(t.slice(4))}</h3>`; }
+      else if (t.startsWith('- ')) { if (!listOpen){html+='\n        <ul>';listOpen=true;} html+=`\n          <li>${fmt(e(t.slice(2)))}</li>`; }
+      else { if (listOpen){html+='\n        </ul>';listOpen=false;} html+=`\n        <p>${fmt(e(t))}</p>`; }
+    });
+    if (listOpen) html+='\n        </ul>';
+    return html;
+  }
+  function e(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(s){ return s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'); }
+
+  // ── SAVE POST ────────────────────────────────────────────────────────────
+  async function savePost() {
+    const title = document.getElementById('post-title').value.trim();
+    const excerpt = document.getElementById('post-excerpt').value.trim();
+    const category = document.getElementById('post-category').value;
+    const readTime = document.getElementById('post-readtime').value;
+    const dateVal = document.getElementById('post-date').value;
+    const filename = document.getElementById('post-filename').value.trim().replace(/\.html$/,'');
+    const postId = document.getElementById('post-id').value;
+    const body = document.getElementById('post-body').value;
+    const imgFile = selectedImage || 'M2_area_enhanced.jpg';
+    const linkText = document.getElementById('link-text').value.trim();
+    const linkUrl = document.getElementById('link-url').value;
+    const linkSentence = document.getElementById('link-sentence').value.trim();
+
+    if (!title) { showToast('Please enter a title', 'error'); return; }
+    if (!filename) { showToast('Please enter a filename', 'error'); return; }
+
+    const dateFormatted = dateVal ? new Date(dateVal+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '';
+    const dateShort = dateVal ? new Date(dateVal+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+    const slug = filename;
+    const canonicalUrl = `https://www.m2roomsandstayspatong.com/blog/${slug}.html`;
+    const parsedBody = parseBody(body);
+    const internalLinkHtml = (linkText && linkUrl && linkSentence)
+      ? `<p class="internal-link">${linkSentence.replace(linkText, `<a href="${linkUrl}" style="color:var(--primary)">${linkText}</a>`)}</p>`
+      : '';
+
+    const html = generateHTML({title,excerpt,category,readTime,dateVal,dateFormatted,imgFile,canonicalUrl,parsedBody,internalLinkHtml,slug});
+
+    // Save the blog post file
+    try {
+      const saveRes = await fetch(`${API}/api/save`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ filePath: `blog/${slug}.html`, content: html })
+      });
+      const result = await saveRes.json();
+      if (!result.ok) throw new Error(result.message);
+      showToast(`✅ Saved: blog/${slug}.html`, 'success');
+
+      // Generate snippets
+      generateSnippets({postId, category, title, excerpt, dateShort, readTime, imgFile, slug, canonicalUrl, dateVal});
+      document.getElementById('snippets-area').style.display = 'block';
+
+      // Reload post list
+      await loadPosts();
+      // Mark as edit mode
+      currentFile = `${slug}.html`;
+      isEditMode = true;
+    } catch(err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
+  }
+
+  function generateHTML({title,excerpt,category,readTime,dateVal,dateFormatted,imgFile,canonicalUrl,parsedBody,internalLinkHtml,slug}) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PKR1WD0L4G"><\/script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PKR1WD0L4G');<\/script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+  <title>${e(title)} | M2 Rooms &amp; Stays Patong Beach</title>
+  <meta name="description" content="${e(excerpt)}" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="${canonicalUrl}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:title" content="${e(title)}" />
+  <meta property="og:description" content="${e(excerpt)}" />
+  <meta property="og:image" content="https://www.m2roomsandstayspatong.com/images/${imgFile}" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"${e(title)}","datePublished":"${dateVal}","author":{"@type":"Organization","name":"M2 Rooms & Stays"},"publisher":{"@type":"Organization","name":"M2 Rooms & Stays","url":"https://www.m2roomsandstayspatong.com"}}<\/script>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --primary: #1a7a7a; --primary-dark: #145f5f; --secondary: #c9913d; --bg: #f9f7f3; --card: #ffffff; --fg: #1a1f2e; --muted: #6b7280; --border: #e5e0d5; --font-serif: 'Playfair Display', Georgia, serif; --font-sans: 'Lato', sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--fg); overflow-x: hidden; line-height: 1.6; }
+    img { max-width: 100%; display: block; } a { text-decoration: none; color: inherit; }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(249,247,243,0.98); backdrop-filter: blur(8px); box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .navbar-top { padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    .navbar-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .navbar-logo { width: 60px; height: 60px; object-fit: contain; }
+    .navbar-brand-name { font-family: var(--font-serif); font-weight: 700; font-size: 1.1rem; color: var(--fg); }
+    .navbar-brand-sub { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .navbar-right { display: flex; align-items: center; gap: 1rem; }
+    .navbar-book { padding: 0.5rem 1.25rem; background: var(--primary); border: none; color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; font-family: var(--font-sans); text-decoration: none; display: inline-block; }
+    .navbar-book:hover { background: var(--primary-dark); }
+    .navbar-bottom { background: rgba(249,247,243,0.98); border-top: 1px solid rgba(229,224,213,0.4); }
+    .navbar-links { display: flex; align-items: center; justify-content: center; list-style: none; padding: 0 2rem; flex-wrap: wrap; }
+    .navbar-links a { padding: 0.625rem 1rem; font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,31,46,0.65); border-bottom: 2px solid transparent; transition: all 0.2s; display: block; text-decoration: none; }
+    .navbar-links a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--fg); }
+    .mobile-nav { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0d4a4a; z-index: 2000; flex-direction: column; padding: 2rem; overflow-y: auto; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-close { align-self: flex-end; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; margin-bottom: 2rem; }
+    .mobile-nav a { color: rgba(255,255,255,0.8); font-size: 1.25rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
+    .blog-hero { padding-top: 8rem; background: var(--card); border-bottom: 1px solid var(--border); }
+    .blog-hero-img { width: 100%; height: 420px; overflow: hidden; position: relative; }
+    .blog-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+    .blog-hero-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+    .blog-hero-inner { max-width: 52rem; margin: 0 auto; padding: 2rem; }
+    .blog-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+    .blog-hero h1 { font-family: var(--font-serif); font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 500; line-height: 1.2; margin-bottom: 1rem; }
+    .blog-hero-meta { display: flex; gap: 1.5rem; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .blog-hero-excerpt { font-size: 1.05rem; color: var(--muted); font-weight: 300; line-height: 1.7; border-left: 3px solid var(--secondary); padding-left: 1.25rem; }
+    .blog-content { max-width: 52rem; margin: 0 auto; padding: 3rem 2rem 6rem; }
+    .blog-content p { color: rgba(26,31,46,0.78); line-height: 1.9; margin-bottom: 1.5rem; font-size: 1.05rem; font-weight: 300; }
+    .blog-content h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; margin-top: 3rem; margin-bottom: 1rem; }
+    .blog-content h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 500; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--primary); }
+    .blog-content ul { margin: 1rem 0 1.5rem 1.5rem; }
+    .blog-content ul li { color: rgba(26,31,46,0.78); line-height: 1.8; margin-bottom: 0.5rem; font-weight: 300; font-size: 1.05rem; }
+    .blog-content strong { font-weight: 700; color: var(--fg); }
+    .blog-cta { background: var(--primary); color: white; padding: 3rem 2rem; text-align: center; margin: 3rem 0 0; }
+    .blog-cta h3 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 500; margin-bottom: 0.75rem; }
+    .blog-cta p { color: rgba(255,255,255,0.75); margin-bottom: 2rem; font-weight: 300; }
+    .blog-cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .blog-cta a { display: inline-block; padding: 0.875rem 2rem; font-family: var(--font-sans); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.2s; }
+    .blog-cta-primary { background: white; color: var(--primary); }
+    .blog-cta-wa { background: #25d366; color: white; }
+    .blog-back { max-width: 52rem; margin: 0 auto; padding: 1.5rem 2rem 0; }
+    .blog-back a { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+    footer { background: #0d4a4a; color: white; padding: 4rem 2rem; }
+    .footer-grid { max-width: 87rem; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+    .footer-brand { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
+    .footer-brand span { font-family: var(--font-sans); font-weight: 300; font-size: 1.4rem; }
+    .footer-aka { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem; }
+    .footer-desc { color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.7; font-size: 0.9rem; max-width: 24rem; }
+    .footer-col h5 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: white; margin-bottom: 1.5rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .footer-col ul a { color: rgba(255,255,255,0.5); font-weight: 300; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col ul a:hover { color: white; }
+    .footer-bottom { max-width: 87rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.3); font-size: 0.75rem; flex-wrap: wrap; gap: 1rem; }
+    .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; background: #25d366; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform 0.2s; }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    .whatsapp-float svg { width: 28px; height: 28px; fill: white; }
+    @media (max-width: 768px) { .navbar-links { display: none; } .hamburger { display: flex; } .blog-hero-img { height: 280px; } .footer-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; text-align: center; } .blog-content { padding: 2rem 1.5rem 4rem; } }
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="navbar-top">
+    <a href="../index.html" class="navbar-brand">
+      <img src="../images/M2_Logo_transparent.png" onerror="this.style.display='none'" alt="M2 Rooms &amp; Stays" class="navbar-logo" />
+      <div><div class="navbar-brand-name">M2 Rooms &amp; Stays</div><div class="navbar-brand-sub">Patong Beach · Phuket · Thailand</div></div>
+    </a>
+    <div class="navbar-right">
+      <a href="../index.html#contact" class="navbar-book">Book Direct</a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="navbar-bottom">
+    <ul class="navbar-links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#rooms">Rooms</a></li>
+      <li><a href="../index.html#amenities">Amenities</a></li>
+      <li><a href="../location.html">Location</a></li>
+      <li><a href="../index.html#attractions">Attractions</a></li>
+      <li><a href="../index.html#reviews">Reviews</a></li>
+      <li><a href="index.html">Blog</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+<div class="mobile-nav" id="mobile-nav">
+  <button class="mobile-nav-close" onclick="document.getElementById('mobile-nav').classList.remove('open')">✕</button>
+  <a href="../index.html#about">About</a>
+  <a href="../index.html#rooms">Rooms</a>
+  <a href="../location.html">Location</a>
+  <a href="index.html">Blog</a>
+  <a href="../faq.html">FAQ</a>
+  <a href="../index.html#contact" style="color:var(--secondary)">Book Direct</a>
+</div>
+<div class="blog-hero">
+  <div class="blog-hero-img">
+    <img src="../images/${imgFile}" alt="${e(title)}" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a4a5a,#2a6a7a)';this.remove()" />
+    <div class="blog-hero-img-overlay"></div>
+  </div>
+  <div class="blog-hero-inner">
+    <p class="blog-tag">${e(category)}</p>
+    <h1>${e(title)}</h1>
+    <div class="blog-hero-meta">
+      <span>📅 ${dateFormatted}</span>
+      <span>⏱ ${readTime}</span>
+      <span>✍️ M2 Rooms &amp; Stays</span>
+    </div>
+    <p class="blog-hero-excerpt">${e(excerpt)}</p>
+  </div>
+</div>
+<div class="blog-back"><a href="index.html">← Back to Blog</a></div>
+<article class="blog-content">
+        ${parsedBody}
+  ${internalLinkHtml}
+  <div class="blog-cta">
+    <h3>Ready to Stay in Patong?</h3>
+    <p>M2 Rooms &amp; Stays — located inside Paradise Complex on Rat U Tith 200 Pi Road. Clean modern rooms from ฿1,100/night.</p>
+    <div class="blog-cta-btns">
+      <a href="../index.html#contact" class="blog-cta-primary">Check Availability →</a>
+      <a href="https://wa.me/66632686289" target="_blank" rel="noreferrer" class="blog-cta-wa">WhatsApp Us</a>
+    </div>
+  </div>
+</article>
+<footer>
+  <div class="footer-grid">
+    <div>
+      <p class="footer-brand">M2 <span>Rooms &amp; Stays</span></p>
+      <p class="footer-aka">Also known as M2 Room For Rent</p>
+      <p class="footer-desc">Your personal sanctuary in Patong Beach. Located inside Paradise Complex, steps from the Zag Club.</p>
+    </div>
+    <div class="footer-col"><h5>Quick Links</h5><ul><li><a href="../index.html#about">About</a></li><li><a href="../index.html#rooms">Rooms</a></li><li><a href="../location.html">Location</a></li><li><a href="index.html">Blog</a></li><li><a href="../faq.html">FAQ</a></li><li><a href="../index.html#contact">Contact</a></li></ul></div>
+    <div class="footer-col"><h5>Connect</h5><ul><li><a href="https://www.instagram.com/m2rooms/" target="_blank" rel="noreferrer">Instagram</a></li><li><a href="https://www.booking.com/hotel/th/m2-room-for-rent.html" target="_blank" rel="noreferrer">Booking.com</a></li><li><a href="https://wa.me/66632686289" target="_blank" rel="noreferrer">WhatsApp</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© <span id="year"></span> M2 Rooms &amp; Stays · M2 Room For Rent. All rights reserved.</p>
+    <p>Patong, Phuket 83150, Thailand</p>
+  </div>
+</footer>
+<a href="https://wa.me/66632686289" target="_blank" rel="noreferrer" class="whatsapp-float" aria-label="WhatsApp us">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobile-nav').classList.add('open'));
+  document.getElementById('year').textContent = new Date().getFullYear();
+<\/script>
+</body>
+</html>`;
+  }
+
+  // ── GENERATE SNIPPETS ────────────────────────────────────────────────────
+  function generateSnippets({postId, category, title, excerpt, dateShort, readTime, imgFile, slug, canonicalUrl, dateVal}) {
+    document.getElementById('snip-index').textContent =
+`    {
+      id: ${postId},
+      tag: '${category}',
+      title: '${title.replace(/'/g,"\\'")}',
+      excerpt: '${excerpt.replace(/'/g,"\\'").replace(/\n/g,' ')}',
+      date: '${dateShort}',
+      readTime: '${readTime}',
+      image: '../images/${imgFile}',
+      url: '${slug}.html'
+    },`;
+
+    document.getElementById('snip-urls').textContent = `    ${postId}: 'blog/${slug}.html',`;
+
+    document.getElementById('snip-posts').textContent =
+`  {
+    id: ${postId},
+    tag: "${category}",
+    title: "${title.replace(/"/g,'\\"')}",
+    excerpt: "${excerpt.replace(/"/g,'\\"').replace(/\n/g,' ')}",
+    date: "${dateShort}",
+    readTime: "${readTime}",
+    color: "var(--primary)"
+  },`;
+
+    document.getElementById('snip-sitemap').textContent =
+`  <url>
+    <loc>${canonicalUrl}</loc>
+    <lastmod>${dateVal}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+  }
+
+  // ── DELETE POST ──────────────────────────────────────────────────────────
+  async function deletePost() {
+    if (!currentFile) return;
+    if (!confirm(`Delete ${currentFile}? This cannot be undone.`)) return;
+    try {
+      // Write an empty redirect file so the URL doesn't 404
+      const redirectHtml = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=https://www.m2roomsandstayspatong.com/blog/index.html"></head></html>`;
+      await fetch(`${API}/api/save`, {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ filePath: `blog/${currentFile}`, content: redirectHtml })
+      });
+      showToast(`${currentFile} replaced with redirect`, 'info');
+      await loadPosts();
+      newPost();
+    } catch(e) { showToast('Delete failed', 'error'); }
+  }
+
+  // ── GIT ACTIONS ──────────────────────────────────────────────────────────
+  async function gitAction(action) {
+    const labels = { pull: 'Pulling…', push: 'Pushing…', status: 'Checking…' };
+    showToast(labels[action] || 'Working…', 'info');
+    try {
+      const res = await fetch(`${API}/api/git`, {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ action })
+      });
+      const result = await res.json();
+      showToast(result.message, result.ok ? 'success' : 'error');
+      if (action === 'pull') await loadPosts();
+      if (action === 'status') document.getElementById('git-status').textContent = result.branch ? `branch: ${result.branch}` : '';
+    } catch(e) {
+      showToast('Git command failed — is server.js running?', 'error');
+    }
+  }
+
+  // ── COPY SNIPPETS ────────────────────────────────────────────────────────
+  function copySnippet(id, btn) {
+    navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────────────────
+  document.getElementById('post-date').value = new Date().toISOString().split('T')[0];
+  loadPosts();
+  loadImages();
+  gitAction('status');
+</script>
+</body>
+</html>
