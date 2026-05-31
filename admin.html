@@ -209,6 +209,14 @@
       <div class="image-grid" id="image-grid"></div>
     </div>
 
+    <!-- INTERNAL LINK -->
+    <div class="form-section">
+      <div class="form-section-label">Internal Link <span style="font-weight:300;color:var(--muted);text-transform:none;letter-spacing:0">(optional)</span></div>
+      <div class="form-group"><label>Link Text</label><input type="text" id="link-text" placeholder="e.g. Deluxe Room with Balcony" /></div>
+      <div class="form-group"><label>Link URL</label><select id="link-url"><option value="">— No internal link —</option><option value="../rooms/deluxe-room-balcony.html">Deluxe Room with Balcony</option><option value="../rooms/deluxe-room-standard.html">Deluxe Room Standard</option><option value="../rooms/superior-room.html">Superior Room</option><option value="../index.html#rooms">All Rooms</option><option value="../index.html#contact">Book Direct</option><option value="../location.html">Location Page</option><option value="../faq.html">FAQ Page</option></select></div>
+      <div class="form-group"><label>Link Sentence <span style="font-weight:300;color:var(--muted)">(natural sentence containing the link)</span></label><input type="text" id="link-sentence" placeholder="e.g. Our Deluxe Room with Balcony is the perfect base for exploring Patong." /><div class="hint">The link text will be hyperlinked within this sentence automatically.</div></div>
+    </div>
+
     <!-- BODY -->
     <div class="form-section">
       <div class="form-section-label">Post Body</div>
@@ -484,6 +492,12 @@ The shoulder season from April to May..."></textarea>
     const postId = document.getElementById('post-id').value;
     const body = document.getElementById('post-body').value;
     const imgFile = selectedImage || 'M2_area_enhanced.jpg';
+    const linkText = document.getElementById('link-text').value.trim();
+    const linkUrl = document.getElementById('link-url').value;
+    const linkSentence = document.getElementById('link-sentence').value.trim();
+    const internalLinkHtml = (linkText && linkUrl && linkSentence)
+      ? `<p>${linkSentence.replace(linkText, `<a href="${linkUrl}" style="color:var(--primary)">${linkText}</a>`)}</p>`
+      : '';
 
     if (!title) { alert('Please enter a post title.'); return; }
     if (!filename) { alert('Please enter a filename (e.g. my-new-post).'); return; }
@@ -639,6 +653,7 @@ The shoulder season from April to May..."></textarea>
 <div class="blog-back"><a href="index.html">← Back to Blog</a></div>
 <article class="blog-content">
         ${parsedBody}
+  ${internalLinkHtml}
   <div class="blog-cta">
     <h3>Ready to Stay in Patong?</h3>
     <p>M2 Rooms &amp; Stays — located inside Paradise Complex on Rat U Tith 200 Pi Road. Clean modern rooms from ฿1,100/night.</p>
