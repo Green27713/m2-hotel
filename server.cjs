@@ -84,19 +84,24 @@ function readPost(filename) {
   let bodyHtml = bodyMatch ? bodyMatch[1].trim() : '';
 
   // Convert HTML back to markdown-ish plain text
+  // First strip any custom HTML blocks (divs, custom classes etc)
   bodyHtml = bodyHtml
-    .replace(/<h2>(.*?)<\/h2>/g, '\n## $1\n')
+    .replace(/<div[^>]*>([\s\S]*?)<\/div>/g, (_, inner) => inner) // unwrap divs
+    .replace(/<h4>(.*?)<\/h4>/g, '\n### $1\n')
     .replace(/<h3>(.*?)<\/h3>/g, '\n### $1\n')
+    .replace(/<h2>(.*?)<\/h2>/g, '\n## $1\n')
     .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
     .replace(/<ul>([\s\S]*?)<\/ul>/g, (_, inner) =>
       inner.replace(/<li>(.*?)<\/li>/g, '\n- $1').trim()
     )
-    .replace(/<p class="internal-link">([\s\S]*?)<\/p>/g, '')
+    .replace(/<p[^>]*class="internal-link"[^>]*>([\s\S]*?)<\/p>/g, '')
     .replace(/<a[^>]*>(.*?)<\/a>/g, '$1')
-    .replace(/<p>([\s\S]*?)<\/p>/g, '\n$1\n')
+    .replace(/<p[^>]*>([\s\S]*?)<\/p>/g, '\n$1\n')
+    .replace(/<[^>]+>/g, '') // strip any remaining HTML tags
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
